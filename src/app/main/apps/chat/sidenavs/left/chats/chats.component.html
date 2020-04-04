@@ -117,7 +117,8 @@
 
                 <div fxLayout="row" fxLayoutAlign="start center">
 
-                    <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
+                    <!--
+                     <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
                         <img class="avatar" [src]="contacts | getById:chat.contactId:'avatar'"
                              alt="{{contacts | getById:chat.contactId:'name'}}"/>
                         <mat-icon class="s-16 status" [ngClass]="contacts | getById:chat.contactId:'status'"></mat-icon>
@@ -136,7 +137,32 @@
                             </div>
                             <div *ngIf="chat.unread" class="mt-4 unread-message-count accent">{{chat.unread}}</div>
                         </div>
+                    </div> 
+                    -->
+                    <div class="avatar-wrapper" fxFlex="0 1 auto" fxLayoutAlign="center center">
+                        <img class="avatar" src="assets/images/avatars/profile.jpg"
+                             alt="{{contacts | getById:chat.contactId:'name'}}"/>
+                        <mat-icon class="s-16 status" 
+                        [ngClass]="chat.status"></mat-icon>
+                    </div>
 
+                    <div fxLayout="row" fxFlex>
+
+                        <div class="pr-4" fxFlex fxLayout="column" fxLayoutAlign="center start">
+                            <div class="contact-name">
+                            {{chat.name}}
+                            </div>
+                            <div class="contact-last-message">
+                            {{chat.lastMessage}}
+                            </div>
+                        </div>
+
+                        <div fxLayout="column" fxLayoutAlign="start end">
+                            <div class="contact-last-message-time">
+                                {{chat.lastMessageTime | date}}
+                            </div>
+                            <div *ngIf="chat.unread" class="mt-4 unread-message-count accent">{{chat.unread}}</div>
+                        </div>
                     </div>
 
                 </div>
@@ -147,34 +173,36 @@
         <!-- / CHATS LIST-->
 
         <!-- CONTACTS LIST-->
-        <div class="contact-list" fxLayout="column">
+        <!--
+            <div class="contact-list" fxLayout="column">
 
-            <div matSubheader *ngIf="(contacts | filter: searchText).length > 0">
-                Contacts
-            </div>
-
-            <button mat-button class="contact"
-                    *ngFor="let contact of contacts| filter: searchText"
-                    (click)="getChat(contact.id)"
-                    [@animate]="{value:'*',params:{y:'100%'}}">
-
-                <div fxLayout="row" fxLayoutAlign="start center">
-
-                    <div class="avatar-wrapper" fxFlex="0 1 auto">
-                        <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.name}}"/>
-                        <mat-icon class="s-16 status" [ngClass]="contact.status"></mat-icon>
-                    </div>
-
-                    <div fxLayout="column" fxLayoutAlign="start start">
-                        <div class="contact-name">{{contact.name}}</div>
-                        <p class="contact-mood">{{contact.mood}}</p>
-                    </div>
-
+                <div matSubheader *ngIf="(contacts | filter: searchText).length > 0">
+                    Contacts
                 </div>
 
-            </button>
+                <button mat-button class="contact"
+                        *ngFor="let contact of contacts| filter: searchText"
+                        (click)="getChat(contact.id)"
+                        [@animate]="{value:'*',params:{y:'100%'}}">
 
-        </div>
+                    <div fxLayout="row" fxLayoutAlign="start center">
+
+                        <div class="avatar-wrapper" fxFlex="0 1 auto">
+                            <img src="{{contact.avatar}}" class="mat-avatar avatar" alt="{{contact.name}}"/>
+                            <mat-icon class="s-16 status" [ngClass]="contact.status"></mat-icon>
+                        </div>
+
+                        <div fxLayout="column" fxLayoutAlign="start start">
+                            <div class="contact-name">{{contact.name}}</div>
+                            <p class="contact-mood">{{contact.mood}}</p>
+                        </div>
+
+                    </div>
+
+                </button>
+
+            </div>
+        -->
         <!-- / CONTACTS LIST-->
 
         <!-- NO RESULTS MESSAGE -->
