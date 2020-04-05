@@ -4,6 +4,10 @@ import { takeUntil } from 'rxjs/operators';
 
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 
+import { AuthenticationService } from '../../../app/_services';
+import { User, Role } from '../../../app/_models';
+import { Router } from '@angular/router';
+
 @Component({
     selector       : 'fuse-navigation',
     templateUrl    : './navigation.component.html',
@@ -13,6 +17,8 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 })
 export class FuseNavigationComponent implements OnInit
 {
+    currentUser: User;
+
     @Input()
     layout = 'vertical';
 
@@ -29,13 +35,36 @@ export class FuseNavigationComponent implements OnInit
      */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseNavigationService: FuseNavigationService
+        private _fuseNavigationService: FuseNavigationService,
+
+        private router: Router,
+        private authenticationService: AuthenticationService
     )
     {
+        this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
 
+    get isAdmin() {
+        return this.currentUser && this.currentUser.role === Role.Admin;
+    }
+
+    get showAdmin(){
+        if(!this.isAdmin)
+        {
+            return "pages"
+        }
+        else{
+            return "";
+        }
+    }
+
+    logout() {
+        this.authenticationService.logout();
+        this.router.navigate(['/login']);
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------

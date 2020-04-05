@@ -58,7 +58,7 @@
                 <fuse-nav-horizontal-item *ngIf="item.type=='item'" [item]="item"></fuse-nav-horizontal-item>
                 <fuse-nav-horizontal-collapsable *ngIf="item.type=='collapsable'"
                                                  [item]="item"></fuse-nav-horizontal-collapsable>
-                <fuse-nav-horizontal-collapsable *ngIf="item.type=='group'"
+                <fuse-nav-horizontal-collapsable *ngIf="item.type=='group' && item.id!=showAdmin"
                                                  [item]="item"></fuse-nav-horizontal-collapsable>
             </ng-container>
 

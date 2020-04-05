@@ -12,9 +12,9 @@ import { takeUntil } from 'rxjs/operators';
 export class QuickPanelComponent implements OnInit, OnDestroy
 {
     date: Date;
-    events: any[];
-    notes: any[];
-    settings: any;
+    //events: any[];
+    //notes: any[];
+    //settings: any;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -29,12 +29,15 @@ export class QuickPanelComponent implements OnInit, OnDestroy
     )
     {
         // Set the defaults
-        this.date = new Date();
-        this.settings = {
-            notify: true,
-            cloud : false,
-            retro : true
-        };
+        // this.date = new Date();
+        // this.settings = {
+        //     notify: true,
+        //     cloud : false,
+        //     retro : true
+        // };
+        setInterval(() => {
+            this.date = new Date()
+        }, 1000);
 
         // Set the private defaults
         this._unsubscribeAll = new Subject();
@@ -50,18 +53,18 @@ export class QuickPanelComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         // Subscribe to the events
-        this._httpClient.get('api/quick-panel-events')
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((response: any) => {
-                this.events = response;
-            });
+        // this._httpClient.get('api/quick-panel-events')
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((response: any) => {
+        //         this.events = response;
+        //     });
 
         // Subscribe to the notes
-        this._httpClient.get('api/quick-panel-notes')
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((response: any) => {
-                this.notes = response;
-            });
+        // this._httpClient.get('api/quick-panel-notes')
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((response: any) => {
+        //         this.notes = response;
+        //     });
     }
 
     /**

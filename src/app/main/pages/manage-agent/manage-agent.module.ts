@@ -5,10 +5,15 @@ import { ManageAgentComponent } from './manage-agent/manage-agent.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { MatIconModule } from '@angular/material/icon';
 
+import { AuthGuard } from '../../../_helpers';
+import { Role } from '../../../_models';
+
 const routes = [
   {
       path     : 'manage-agent',
-      component: ManageAgentComponent
+      component: ManageAgentComponent,
+      canActivate: [AuthGuard],
+      data: { roles: [Role.Admin] }
   }
 ];
 

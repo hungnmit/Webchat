@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -21,6 +21,8 @@ import { AppComponent } from 'app/app.component';
 import { AppStoreModule } from 'app/store/store.module';
 import { LayoutModule } from 'app/layout/layout.module';
 
+import { JwtInterceptor, ErrorInterceptor } from './_helpers';
+
 const appRoutes: Routes = [
     {
         path        : 'apps',
@@ -34,17 +36,25 @@ const appRoutes: Routes = [
     //     path        : 'ui',
     //     loadChildren: './main/ui/ui.module#UIModule'
     // },
-    {
-        path        : 'documentation',
-        loadChildren: './main/documentation/documentation.module#DocumentationModule'
-    },
-    {
-        path        : 'angular-material-elements',
-        loadChildren: './main/angular-material-elements/angular-material-elements.module#AngularMaterialElementsModule'
-    },
+    // {
+    //     path        : 'documentation',
+    //     loadChildren: './main/documentation/documentation.module#DocumentationModule'
+    // },
+    // {
+    //     path        : 'angular-material-elements',
+    //     loadChildren: './main/angular-material-elements/angular-material-elements.module#AngularMaterialElementsModule'
+    // },
+    // {
+    //     path      : '**',
+    //     redirectTo: 'pages/manage-agent'
+    // }
+    // {
+    //     path      : '**',
+    //     redirectTo: 'pages/auth/login'
+    // }
     {
         path      : '**',
-        redirectTo: 'pages/manage-agent'
+        redirectTo: 'apps/chat'
     }
 ];
 
@@ -81,6 +91,10 @@ const appRoutes: Routes = [
         // App modules
         LayoutModule,
         AppStoreModule
+    ],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     ],
     bootstrap   : [
         AppComponent

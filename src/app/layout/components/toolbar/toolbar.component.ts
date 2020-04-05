@@ -8,6 +8,9 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
 
 import { navigation } from 'app/navigation/navigation';
+///////////
+import { AuthenticationService } from '../../../_services';
+import { Router } from '@angular/router';
 
 @Component({
     selector     : 'toolbar',
@@ -25,6 +28,8 @@ export class ToolbarComponent implements OnInit, OnDestroy
     navigation: any;
     selectedLanguage: any;
     userStatusOptions: any[];
+    imageUser = this.authenticationService.ImageUser;
+    username = this.authenticationService.currentUserValue.username;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -37,9 +42,11 @@ export class ToolbarComponent implements OnInit, OnDestroy
      * @param {TranslateService} _translateService
      */
     constructor(
+        private router: Router,
         private _fuseConfigService: FuseConfigService,
         private _fuseSidebarService: FuseSidebarService,
-        private _translateService: TranslateService
+        private _translateService: TranslateService,
+        private authenticationService: AuthenticationService
     )
     {
         // Set the defaults
@@ -85,11 +92,18 @@ export class ToolbarComponent implements OnInit, OnDestroy
         ];
 
         this.navigation = navigation;
-
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
 
+    logout() {
+        this.authenticationService.logout();
+        this.router.navigate(['/pages/auth/login']);
+    }
+
+    showChat() {
+        this.router.navigate(['/apps/chat']);
+    }
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
     // -----------------------------------------------------------------------------------------------------

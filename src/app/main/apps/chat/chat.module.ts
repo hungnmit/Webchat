@@ -24,6 +24,8 @@ import { ChatLeftSidenavComponent } from 'app/main/apps/chat/sidenavs/left/left.
 import { ChatRightSidenavComponent } from 'app/main/apps/chat/sidenavs/right/right.component';
 import { ChatContactSidenavComponent } from 'app/main/apps/chat/sidenavs/right/contact/contact.component';
 
+import { AuthGuard } from '../../../_helpers';
+
 const routes: Routes = [
     {
         path: '**',
@@ -31,7 +33,8 @@ const routes: Routes = [
         children: [],
         resolve: {
             chat: ChatService
-        }
+        },
+        canActivate: [AuthGuard]
     }
 ];
 

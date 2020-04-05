@@ -25,6 +25,9 @@ import { Error500Module } from 'app/main/pages/errors/500/error-500.module';
 import { ManageQueueModule } from 'app/main/pages/manage-queue/manage-queue.module';
 import { ManageAgentModule } from 'app/main/pages/manage-agent/manage-agent.module';
 
+import { JwtInterceptor, ErrorInterceptor } from '../../_helpers';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
 @NgModule({
     imports: [
         // Authentication
@@ -71,7 +74,13 @@ import { ManageAgentModule } from 'app/main/pages/manage-agent/manage-agent.modu
 
         ManageQueueModule,
         ManageAgentModule,
-    ]
+    ],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+
+        // provider used to create fake backend
+    ],
 })
 export class PagesModule
 {

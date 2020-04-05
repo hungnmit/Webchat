@@ -5,10 +5,15 @@ import { ManageQueueComponent } from './manage-queue.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { MatIconModule } from '@angular/material/icon';
 
+import { AuthGuard } from '../../../_helpers';
+import { Role } from '../../../_models';
+
 const routes = [
   {
       path     : 'manage-queue',
-      component: ManageQueueComponent
+      component: ManageQueueComponent,
+      canActivate: [AuthGuard],
+      data: { roles: [Role.Admin] }
   }
 ];
 

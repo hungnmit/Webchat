@@ -7,4 +7,8 @@ export const environment = {
 
     //API for Queue
     urlQueue: "http://localhost:8080/api/queue/",
+
+    apiUrl: 'http://localhost:8080/api',
+
+    password: "khoa123",
 };

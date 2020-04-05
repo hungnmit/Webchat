@@ -3,6 +3,8 @@ import { fuseAnimations } from '@fuse/animations';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { environment } from '../../../../../environments/environment.prod';
+import { AuthenticationService } from 'app/_services';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-manage-agent',
@@ -59,13 +61,23 @@ export class ManageAgentComponent implements OnInit {
 
   renderValue: string;
 
-  constructor(private http: HttpClient,private datePipe: DatePipe){
+  constructor(
+    private http: HttpClient,
+    private datePipe: DatePipe,
+    private authenticationService: AuthenticationService,
+    private router: Router,
+  ) {
   }
-  source:any = [];
+  source: any = [];
   ngOnInit(): void {
-      this.http.get<ListAgents[]>(environment.urlAgent).subscribe(
-        data => {
-          this.source = data['result'];
+    // redirect to chat if logged is not admin
+    if (!this.authenticationService.isAdmin) {
+      this.router.navigate(['/apps/chat']);
+    }
+
+    this.http.get<ListAgents[]>(environment.urlAgent).subscribe(
+      data => {
+        this.source = data['result'];
       },
       (err: HttpErrorResponse) => {
         if (err.error instanceof Error) {
@@ -93,14 +105,14 @@ export class ManageAgentComponent implements OnInit {
     }
   };
   //event create button
-  onCreateConfirm(event):void {
+  onCreateConfirm(event): void {
     if (window.confirm('Are you sure you want to add new agent?')) {
       // if(this.source.included(event.newData.id))
       // {
       //   this.renderValue = 'error';
       //   event.confirm.reject();
       // }
-      this.http.post<ListAgents[]>(environment.urlAgent,event.newData).subscribe(result => {
+      this.http.post<ListAgents[]>(environment.urlAgent, event.newData).subscribe(result => {
         //this.settings = Object.assign({}, this.settings);
         event.confirm.resolve(event.newData);
       }, (err: HttpErrorResponse) => {
@@ -115,7 +127,7 @@ export class ManageAgentComponent implements OnInit {
     }
   };
   //event edit button
-  onSaveConfirm(event):void {
+  onSaveConfirm(event): void {
     if (window.confirm('Are you sure you want to update?')) {
       this.http.put<ListAgents[]>(environment.urlAgent + event.data.id, event.newData).subscribe(result => {
         event.confirm.resolve(event.newData);

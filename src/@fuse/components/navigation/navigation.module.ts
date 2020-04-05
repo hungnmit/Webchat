@@ -13,6 +13,9 @@ import { FuseNavVerticalGroupComponent } from './vertical/group/group.component'
 import { FuseNavHorizontalItemComponent } from './horizontal/item/item.component';
 import { FuseNavHorizontalCollapsableComponent } from './horizontal/collapsable/collapsable.component';
 
+import { JwtInterceptor, ErrorInterceptor } from '../../../app/_helpers';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
 @NgModule({
     imports     : [
         CommonModule,
@@ -33,7 +36,11 @@ import { FuseNavHorizontalCollapsableComponent } from './horizontal/collapsable/
         FuseNavVerticalCollapsableComponent,
         FuseNavHorizontalItemComponent,
         FuseNavHorizontalCollapsableComponent
-    ]
+    ],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    ],
 })
 export class FuseNavigationModule
 {
