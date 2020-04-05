@@ -23,6 +23,7 @@ import { ChatUserSidenavComponent } from 'app/main/apps/chat/sidenavs/left/user/
 import { ChatLeftSidenavComponent } from 'app/main/apps/chat/sidenavs/left/left.component';
 import { ChatRightSidenavComponent } from 'app/main/apps/chat/sidenavs/right/right.component';
 import { ChatContactSidenavComponent } from 'app/main/apps/chat/sidenavs/right/contact/contact.component';
+import { CookieService } from 'ngx-cookie-service';
 
 import { AuthGuard } from '../../../_helpers';
 
@@ -49,7 +50,7 @@ const routes: Routes = [
         ChatRightSidenavComponent,
         ChatContactSidenavComponent
     ],
-    imports     : [
+    imports: [
         RouterModule.forChild(routes),
 
         MatButtonModule,
@@ -65,10 +66,10 @@ const routes: Routes = [
 
         FuseSharedModule
     ],
-    providers   : [
-        ChatService
+    providers: [
+        ChatService,
+        CookieService
     ]
 })
-export class ChatModule
-{
+export class ChatModule {
 }
