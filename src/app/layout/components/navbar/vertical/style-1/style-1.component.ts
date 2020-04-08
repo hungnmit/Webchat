@@ -7,7 +7,6 @@ import { FuseConfigService } from '@fuse/services/config.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FusePerfectScrollbarDirective } from '@fuse/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { FuseSidebarService } from '@fuse/components/sidebar/sidebar.service';
-import { User } from 'app/_models';
 import { AuthenticationService } from 'app/_services';
 
 @Component({
@@ -20,7 +19,7 @@ export class NavbarVerticalStyle1Component implements OnInit, OnDestroy
 {
     fuseConfig: any;
     navigation: any;
-    username = this.authenticationService.currentUserValue.username;
+    username = this.authenticationService.getUsername;
     imageUser = this.authenticationService.ImageUser;
     // Private
     private _fusePerfectScrollbar: FusePerfectScrollbarDirective;

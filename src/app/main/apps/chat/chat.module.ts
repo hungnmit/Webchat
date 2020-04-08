@@ -25,8 +25,6 @@ import { ChatRightSidenavComponent } from 'app/main/apps/chat/sidenavs/right/rig
 import { ChatContactSidenavComponent } from 'app/main/apps/chat/sidenavs/right/contact/contact.component';
 import { CookieService } from 'ngx-cookie-service';
 
-import { AuthGuard } from '../../../_helpers';
-
 const routes: Routes = [
     {
         path: '**',
@@ -35,7 +33,6 @@ const routes: Routes = [
         resolve: {
             chat: ChatService
         },
-        canActivate: [AuthGuard]
     }
 ];
 

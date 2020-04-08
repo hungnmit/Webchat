@@ -29,7 +29,7 @@ export class ToolbarComponent implements OnInit, OnDestroy
     selectedLanguage: any;
     userStatusOptions: any[];
     imageUser = this.authenticationService.ImageUser;
-    username = this.authenticationService.currentUserValue.username;
+    username = this.authenticationService.getUsername;
 
     // Private
     private _unsubscribeAll: Subject<any>;

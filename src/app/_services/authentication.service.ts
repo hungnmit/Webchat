@@ -20,16 +20,34 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
-    get isAdmin() {
+    public get checkCurrentUser(){
+        if(this.currentUserSubject.value !== null){
+            return true;
+        }
+        return false;
+    }
+    public get isAdmin() {
         return this.currentUserValue && this.currentUserValue.role === Role.Admin;
     }
 
-    public get ImageUser(): string{
-        if(this.currentUserValue.role === Role.Admin)
+    public get getUsername(): string{
+        if(this.checkCurrentUser)
         {
-            return "assets/images/avatars/Velazquez.jpg";
+            return this.currentUserValue.username;
         }
-        return "assets/images/avatars/profile.jpg"
+        return "agent";
+    }
+
+    public get ImageUser(): string{
+        if(this.checkCurrentUser)
+        {
+            if(this.currentUserValue.role === Role.Admin)
+            {
+                return "assets/images/avatars/Velazquez.jpg";
+            }
+            return "assets/images/avatars/profile.jpg";
+        }
+        return "assets/images/avatars/profile.jpg";
     }
     // login(username: string, password: string) {
     //     return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password })
