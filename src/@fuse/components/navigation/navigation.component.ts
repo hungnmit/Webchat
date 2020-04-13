@@ -57,7 +57,7 @@ export class FuseNavigationComponent implements OnInit
             return "pages"
         }
         else{
-            return "";
+            return "applications";
         }
     }
 

@@ -77,13 +77,6 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy 
                 // User's shortcut items
                 this.shortcutItems = [
                     {
-                        title    : 'Chat',
-                        translate: 'NAV.CHAT',
-                        type     : 'item',
-                        icon     : 'chat',
-                        url      : '/apps/chat',
-                    },
-                    {
                         title: 'Manage Agent',
                         type : 'item',
                         icon : 'supervised_user_circle',

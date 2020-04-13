@@ -1,0 +1,78 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar matDialogTitle class="mat-accent m-0">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{dialogTitle}}</span>
+            <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+
+        <mat-toolbar-row class="toolbar-bottom py-16" fxLayout="column" fxLayoutAlign="center center">
+            <div class="contact-name mt-8">{{queue.id}}</div>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pb-0 m-0" fusePerfectScrollbar>
+
+        <form [formGroup]="queueForm">
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>ID</mat-label>
+                    <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+                    <input name="id" formControlName="id" matInput required>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Name</mat-label>
+                    <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+                    <input name="name" formControlName="name" matInput required>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Date Received</mat-label>
+                    <input matInput [matDatepicker]="dateReceived" name="dateReceived" formControlName="dateReceived">
+                    <mat-datepicker-toggle matSuffix [for]="dateReceived"></mat-datepicker-toggle>
+                    <mat-datepicker [startAt]="dateReceived" #dateReceived></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex style="width: 100%;">
+                    <mat-label>Agent In Queue</mat-label>
+                    <mat-select [(ngModel)]="selectedOptions" (openedChange)="comboChange($event)" [formControl]="agents" multiple>
+                        <mat-option *ngFor="let agent of agentList" [value]="agent">{{agent}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+
+            <input value="agentInQueue" name="agentInQueue" formControlName="agentInQueue" hidden matInput>
+
+        </form>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+
+        <button *ngIf="action === 'edit'" mat-button class="mr-8" (click)="matDialogRef.close(['close',queueForm])"
+            aria-label="Close" matTooltip="Close">
+            CLOSE
+        </button>
+
+        <button *ngIf="action !== 'edit'" mat-button class="save-button" (click)="matDialogRef.close(queueForm)"
+            [disabled]="queueForm.invalid" aria-label="SAVE">
+            ADD
+        </button>
+
+        <button *ngIf="action === 'edit'" mat-button class="save-button"
+            (click)="matDialogRef.close(['save',queueForm])" [disabled]="queueForm.invalid" aria-label="SAVE">
+            SAVE
+        </button>
+
+    </div>
+</div>

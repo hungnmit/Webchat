@@ -1,0 +1,105 @@
+<div class="dialog-content-wrapper">
+    <mat-toolbar matDialogTitle class="mat-accent m-0">
+        <mat-toolbar-row fxLayout="row" fxLayoutAlign="space-between center">
+            <span class="title dialog-title">{{dialogTitle}}</span>
+            <button mat-icon-button (click)="matDialogRef.close()" aria-label="Close dialog">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-toolbar-row>
+
+        <mat-toolbar-row class="toolbar-bottom py-16" fxLayout="column" fxLayoutAlign="center center">
+            <img [src]="avatarDefault" class="avatar contact-avatar huge m-0" [alt]="agent.name" />
+            <div class="contact-name mt-8">{{agent.id}}</div>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div mat-dialog-content class="p-24 pb-0 m-0" fusePerfectScrollbar>
+
+        <form [formGroup]="agentForm">
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex aria-disabled="true">
+                    <mat-label>ID</mat-label>
+                    <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+                    <input name="id" formControlName="id" matInput required disabled>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Password</mat-label>
+                    <mat-icon matSuffix class="secondary-text">account_circle</mat-icon>
+                    <input name="password" formControlName="password" matInput required>
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Date Received</mat-label>
+                    <input matInput [matDatepicker]="dateReceived" name="dateReceived" formControlName="dateReceived">
+                    <mat-datepicker-toggle matSuffix [for]="dateReceived"></mat-datepicker-toggle>
+                    <mat-datepicker [startAt]="dateReceived" #dateReceived></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <!-- <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Status</mat-label>
+                    <mat-icon matSuffix class="secondary-text">phone</mat-icon>
+                    <input formControlName="online" matInput>
+                </mat-form-field>
+            </div> -->
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Talking</mat-label>
+                    <mat-icon matSuffix class="secondary-text">email</mat-icon>
+                    <input name="talking" formControlName="talking" matInput type="number">
+                </mat-form-field>
+            </div>
+
+            <div fxLayout="row" fxLayoutAlign="start start">
+                <!-- <mat-form-field appearance="outline" fxFlex>
+                    <mat-label>Queue In Agent</mat-label>
+                    <mat-icon matSuffix class="secondary-text">domain</mat-icon>
+                    <input name="agentInQueue" formControlName="agentInQueue" matInput>
+                </mat-form-field> -->
+
+                <mat-form-field appearance="outline" fxFlex style="width: 100%;">
+                    <mat-label>Queue In Agent</mat-label>
+                    <mat-select [(ngModel)]="selectedOptions" (openedChange)="comboChange($event)" [formControl]="queues" multiple>
+                        <mat-option *ngFor="let queue of queueList" [value]="queue">{{queue}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+
+            <input value="agentInQueue" name="agentInQueue" formControlName="agentInQueue" hidden matInput>
+
+            <mat-checkbox value="online" name="online" formControlName="online">
+                <label>Active</label>
+            </mat-checkbox>
+
+        </form>
+
+    </div>
+
+    <div mat-dialog-actions class="m-0 p-16" fxLayout="row" fxLayoutAlign="end center">
+
+        <button *ngIf="action === 'edit'" mat-button class="mr-8" (click)="matDialogRef.close(['close',agentForm])"
+            aria-label="Close" matTooltip="Close">
+            CLOSE
+        </button>
+
+        <button *ngIf="action !== 'edit'" mat-button class="save-button" (click)="matDialogRef.close(agentForm)"
+            [disabled]="agentForm.invalid" aria-label="SAVE">
+            ADD
+        </button>
+
+        <button *ngIf="action === 'edit'" mat-button class="save-button"
+            (click)="matDialogRef.close(['save',agentForm])" [disabled]="agentForm.invalid" aria-label="SAVE">
+            SAVE
+        </button>
+
+    </div>
+</div>
