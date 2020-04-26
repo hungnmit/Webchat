@@ -20,34 +20,36 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
+    // tslint:disable-next-line: typedef
     public get checkCurrentUser(){
-        if(this.currentUserSubject.value !== null){
+        if (this.currentUserSubject.value !== null){
             return true;
         }
         return false;
     }
+    // tslint:disable-next-line: typedef
     public get isAdmin() {
         return this.currentUserValue && this.currentUserValue.role === Role.Admin;
     }
 
     public get getUsername(): string{
-        if(this.checkCurrentUser)
+        if (this.checkCurrentUser)
         {
             return this.currentUserValue.username;
         }
-        return "agent";
+        return 'agent';
     }
 
     public get ImageUser(): string{
-        if(this.checkCurrentUser)
+        if (this.checkCurrentUser)
         {
-            if(this.currentUserValue.role === Role.Admin)
+            if (this.currentUserValue.role === Role.Admin)
             {
-                return "assets/images/avatars/Velazquez.jpg";
+                return 'assets/images/avatars/Velazquez.jpg';
             }
-            return "assets/images/avatars/profile.jpg";
+            return 'assets/images/avatars/profile.jpg';
         }
-        return "assets/images/avatars/profile.jpg";
+        return 'assets/images/avatars/profile.jpg';
     }
     // login(username: string, password: string) {
     //     return this.http.post<any>(`${environment.apiUrl}/users/authenticate`, { username, password })
@@ -59,8 +61,9 @@ export class AuthenticationService {
     //         }));
     // }
 
-    login(username: string, userPassword: string, password: string) {
-        return this.http.post<any>(`${environment.API_URL}/signin`, { username, userPassword, password })
+    // tslint:disable-next-line: typedef
+    login(username: string, password: string) {
+        return this.http.post<any>(`${environment.API_URL}/signin`, { username,  password })
             .pipe(map(user => {
                 // login successful if there's a jwt token in the response
                 if (user && user.token) {
@@ -68,15 +71,17 @@ export class AuthenticationService {
                     localStorage.setItem('currentUser', JSON.stringify(user));
                     this.currentUserSubject.next(user);
                 }
-                if(user.error == undefined)
+                if (user.error === undefined)
                 {
-                    user.error = "";
+                    user.error = '';
                     return user;
                 }
+                console.log(user);
                 return user;
             }));
     }
 
+    // tslint:disable-next-line: typedef
     logout() {
         // remove user from local storage to log user out
         localStorage.removeItem('currentUser');

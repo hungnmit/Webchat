@@ -29,6 +29,14 @@
                         </div>
                     </button>
 
+                    <button mat-menu-item (click)="setUserStatus('offline')">
+                        <div fxLayout="row" fxLayoutAlign="start center">
+                            <mat-icon class="s-16 status offline"></mat-icon>
+                            <span>Offline</span>
+                        </div>
+                    </button>
+                    
+                    <!--
                     <button mat-menu-item (click)="setUserStatus('away')">
                         <div fxLayout="row" fxLayoutAlign="start center">
                             <mat-icon class="s-16 status away"></mat-icon>
@@ -42,13 +50,8 @@
                             <span>Do not disturb</span>
                         </div>
                     </button>
-
-                    <button mat-menu-item (click)="setUserStatus('offline')">
-                        <div fxLayout="row" fxLayoutAlign="start center">
-                            <mat-icon class="s-16 status offline"></mat-icon>
-                            <span>Offline</span>
-                        </div>
-                    </button>
+                    -->
+                    
                 </mat-menu>
                 <!-- / USER STATUS -->
 
@@ -113,6 +116,7 @@
             <button mat-button class="contact"
                     *ngFor="let chat of user.chatList | filter: searchText"
                     (click)="getChat(chat.contactId)" ngClass="{'unread':contact.unread}"
+                    [ngStyle]="{background: chat.currentChat ? '#d0dde8': ''}"
                     [@animate]="{value:'*',params:{y:'100%'}}">
 
                 <div fxLayout="row" fxLayoutAlign="start center">

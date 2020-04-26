@@ -100,9 +100,12 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                 // add cookie
                 const { CONTACT_COOKIES } = environment;
                 const contactCookie = this.cookieService.get(CONTACT_COOKIES);
-                let contactArr = [];
+                let contactArr;
                 if (contactCookie) {
                     contactArr = JSON.parse(contactCookie);
+                }
+                if (!(contactArr && contactArr.length > 0)) {
+                    contactArr = [];
                 }
                 contactArr.push(contactMessageID);
                 this.cookieService.set(CONTACT_COOKIES, contactArr.length > 0 ? JSON.stringify(contactArr) : null);
@@ -118,6 +121,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -131,7 +135,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     getChat(contact): void {
         this._chatService.getChat(contact);
-
+        
         if (!this._mediaObserver.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
         }

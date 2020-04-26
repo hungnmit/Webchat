@@ -40,13 +40,20 @@
 
         <mat-radio-group formControlName="status" fxLayout="column">
 
-            <mat-radio-button value="online" class="py-8">
+            <mat-radio-button id='online-btn' value="online" (click)="setUserStatus('online')" class="py-8">
                 <div fxLayout="row" fxLayoutAlign="start center">
                     <mat-icon class="status online mr-8"></mat-icon>
                     <span class="mat-h4 m-0">Online</span>
                 </div>
             </mat-radio-button>
 
+            <mat-radio-button value="offline" (click)="setUserStatus('offline')" class="py-8">
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon class="status offline mr-8"></mat-icon>
+                    <span class="mat-h4 m-0">Offline</span>
+                </div>
+            </mat-radio-button>
+<!--
             <mat-radio-button value="away" class="py-8">
                 <div fxLayout="row" fxLayoutAlign="start center">
                     <mat-icon class="status away mr-8"></mat-icon>
@@ -60,13 +67,8 @@
                     <span class="mat-h4 m-0">Do not disturb</span>
                 </div>
             </mat-radio-button>
-
-            <mat-radio-button value="offline" class="py-8">
-                <div fxLayout="row" fxLayoutAlign="start center">
-                    <mat-icon class="status offline mr-8"></mat-icon>
-                    <span class="mat-h4 m-0">Offline</span>
-                </div>
-            </mat-radio-button>
+ -->
+            
         </mat-radio-group>
 
     </form>

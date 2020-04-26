@@ -47,6 +47,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (this.authenticationService.isAdmin) {
             this.router.navigate(['/pages/manage-agent']);
         }
+        console.log(`agent: ${JSON.stringify(this._chatService.user)}`);
+        this._chatService.updateAgentStatus(true);
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(chatData => {
@@ -61,5 +63,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
+        this._chatService.updateAgentStatus(false);
+        this._chatService.closeSocket();
     }
 }

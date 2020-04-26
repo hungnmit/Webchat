@@ -95,16 +95,16 @@ export class LoginComponent implements OnInit {
             return;
         }
 
-        this.authenticationService.login(this.data.username.value, this.data.password.value, environment.password)
+        this.authenticationService.login(this.data.username.value, this.data.password.value)
             .pipe(first())
             .subscribe(
                 data => {
                     this.error = data.error;
                     this.router.navigate([this.returnUrl]);
-                    //console.log('data:   '+data);
+                    // console.log('data:   '+data);
                 },
                 error => {
-                    //console.log('error:  '+error);
+                    // console.log('error:  '+error);
                     this.error = error;
                 });
     }

@@ -206,11 +206,13 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
         this._chatService.updateDialog(this.selectedChat.chatId, this.dialog).then(response => {
             this.readyToReply();
         });
+
+        this._chatService.setUnreadStatus(this.contact.contactId, -1);
     }
 
     replyAgent(data): void {
         const { contactId } = this.contact;
-        console.log(`replyAgent with contactId: ${contactId}`);
+        console.log(`replyAgent : ${JSON.stringify(data)}`);
         if (data.contactMessageID === contactId) {
             const message = {
                 who: contactId,
@@ -229,10 +231,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.readyToReply();
             });
         }
-        else {
-            this._chatService.setUnreadStatus(contactId);
-        }
-
+        this._chatService.setUnreadStatus(data.contactMessageID);
     }
 
     completeConversation(): void {

@@ -6,6 +6,7 @@ import * as io from 'socket.io-client';
 import { FuseUtils } from '@fuse/utils';
 import { environment } from 'environments/environment.prod';
 import { CookieService } from 'ngx-cookie-service';
+import { AuthenticationService } from 'app/_services';
 
 @Injectable()
 export class ChatService implements Resolve<any>
@@ -21,7 +22,7 @@ export class ChatService implements Resolve<any>
     onRightSidenavViewChanged: Subject<any>;
     socket: any;
     onContactUpdate: Subject<any>;
-
+    headers: any;
     /**
      * Constructor
      *
@@ -29,7 +30,8 @@ export class ChatService implements Resolve<any>
      */
     constructor(
         private _httpClient: HttpClient,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        private authenticateService: AuthenticationService
     ) {
         // Set the defaults
         this.onChatSelected = new BehaviorSubject(null);
@@ -64,6 +66,12 @@ export class ChatService implements Resolve<any>
                     // console.log(user);
                     this.socket = io(environment.SOCKET_URL, { query: `agentID=${user.id}` });
                     this.addContactFromCookie();
+
+                    this.headers = {
+                        'x-access-token':
+                            this.authenticateService.currentUserValue.token
+                    };
+
                     resolve();
                 },
                 reject
@@ -91,26 +99,23 @@ export class ChatService implements Resolve<any>
         }
 
         return new Promise((resolve, reject) => {
-            // this._httpClient.get('api/chat-chats/' + chatItem.id)
-            //     .subscribe((response: any) => {
-            //         const chat = response;
 
-            //         const chatContact = this.contacts.find((contact) => {
-            //             return contact.id === contactId;
-            //         });
+            // remove unread number and current chat
+            const chatList = this.user.chatList;
+            for (const item of chatList) {
+                item.currentChat = false;
+            }
+            if (chatList && chatList.length > 0) {
+                const ct = chatList.find(c => c.contactId === contactId);
+                if (ct) {
+                    ct.unread = null;
+                    ct.currentChat = true;
+                }
+            }
 
-            //         const chatData = {
-            //             chatId: chat.id,
-            //             dialog: chat.dialog,
-            //             contact: chatContact
-            //         };
 
-            //         this.onChatSelected.next({ ...chatData });
-
-            //     }, reject);
-            // console.log(contactId);
-
-            this._httpClient.post(environment.API_URL + '/conversation/get', { conversationID: contactId })
+            // get conversation 
+            this._httpClient.post(environment.API_URL + '/conversation/get', { conversationID: contactId }, this.headers)
                 .subscribe((response: any) => {
                     console.log(response);
                     // const chat = response;
@@ -129,6 +134,7 @@ export class ChatService implements Resolve<any>
                                 time: item.DateReceived
                             });
                         }
+                        dialog = dialog.reverse();
                     }
                     const chatData = {
                         chatId: contactId,
@@ -206,6 +212,7 @@ export class ChatService implements Resolve<any>
      */
     setUserStatus(status): void {
         this.user.status = status;
+
     }
 
     /**
@@ -260,7 +267,7 @@ export class ChatService implements Resolve<any>
 
     getTransferContacts(data): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.get(environment.API_URL + '/contactmessage/' + data.contactMessageID)
+            this._httpClient.get(environment.API_URL + '/contactmessage/' + data.contactMessageID, this.headers)
                 .subscribe((response: any) => {
                     if (response) {
                         const { ContactMessageID, SenderName } = response;
@@ -297,31 +304,17 @@ export class ChatService implements Resolve<any>
      */
     getUser(): Promise<any> {
         return new Promise(async (resolve, reject) => {
-            // this._httpClient.get('api/chat-user')
-            //     .subscribe((response: any) => {
-            //         const user = {
-            //             id: '12321',
-            //             name: 'khoa',
-            //             avatar: 'assets/images/avatars/profile.jpg',
-            //             chatList: [
-            //                 {
-            //                     'chatId': '00421491-75c1-11ea-9816-c7ae3cdedb85|livechat',
-            //                     'contactId': '00421491-75c1-11ea-9816-c7ae3cdedb85|livechat',
-            //                     'lastMessageTime': '2020-04-03 22:37:39.953'
-            //                 },
-            //             ]
-            //         };
-            //         resolve(user);
-            //         // resolve(response[0]);
-            //     }, reject);
+
             const user = {
-                id: 1,
+                id: this.authenticateService.currentUserValue.username,
                 name: 'khoa',
                 avatar: 'assets/images/avatars/profile.jpg',
                 chatList: []
             };
 
             resolve(user);
+
+
         });
     }
 
@@ -364,7 +357,7 @@ export class ChatService implements Resolve<any>
         return arr;
     }
 
-    setUnreadStatus(contactId): void {
+    setUnreadStatus(contactId, value = 0): void {
         const contact = this.user.chatList.find(x => x.contactId === contactId);
         // console.log(contact);
         if (contact) {
@@ -373,6 +366,9 @@ export class ChatService implements Resolve<any>
             }
             else {
                 contact.unread++;
+            }
+            if (value === -1) {
+                contact.unread = null;
             }
         }
         else {
@@ -401,8 +397,10 @@ export class ChatService implements Resolve<any>
         const contactCookie = decodeURIComponent(this.cookieService.get(CONTACT_COOKIES));
         if (contactCookie) {
             const contactMessageArr = JSON.parse(contactCookie);
-            const newContactArr = contactMessageArr.filter(c => c !== contactId);
-            this.cookieService.set(CONTACT_COOKIES, newContactArr.length > 0 ? JSON.stringify(newContactArr) : null);
+            if (contactMessageArr && contactMessageArr.length > 0) {
+                const newContactArr = contactMessageArr.filter(c => c !== contactId);
+                this.cookieService.set(CONTACT_COOKIES, newContactArr.length > 0 ? JSON.stringify(newContactArr) : null);
+            }
         }
     }
 
@@ -414,25 +412,45 @@ export class ChatService implements Resolve<any>
 
         if (contactCookie) {
             const contactMessageArr = JSON.parse(contactCookie);
-            for (const item of contactMessageArr) {
-                let response: any = await this._httpClient.get(API_URL + '/contactmessage/' + item).toPromise();
-                console.log(response);
-                if (response && response.result) {
-                    const { ID, SenderName } = response.result;
-                    const contact = {
-                        chatId: ID,
-                        contactId: ID,
-                        status: 'online',
-                        name: SenderName,
-                        avatar: 'assets/images/avatars/profile.jpg'
-                    };
-                    this.addContact(contact);
-                }
-                else {
-                    console.log(`Can not found contact message ${item}`);
+            if (contactMessageArr && contactMessageArr.length > 0) {
+                for (const item of contactMessageArr) {
+                    let response: any = await this._httpClient.get(API_URL + '/contactmessage/' + item, this.headers).toPromise();
+                    console.log(response);
+                    if (response && response.result) {
+                        const { ID, SenderName } = response.result;
+                        const contact = {
+                            chatId: ID,
+                            contactId: ID,
+                            status: 'online',
+                            name: SenderName,
+                            avatar: 'assets/images/avatars/profile.jpg'
+                        };
+                        this.addContact(contact);
+                    }
+                    else {
+                        console.log(`Can not found contact message ${item}`);
+                    }
                 }
             }
         }
     }
+
+    closeSocket(): void {
+        if (this.socket) {
+            this.socket.close();
+        }
+    }
+
+    async updateAgentStatus(online): Promise<any> {
+        const { API_URL } = environment;
+
+        this._httpClient.post(API_URL + '/online', {
+            agentID: this.user.id,
+            online
+        }, this.headers).toPromise().then(res => {
+            console.log(res);
+        });
+    }
+
 }
 
