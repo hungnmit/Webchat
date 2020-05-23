@@ -65,7 +65,7 @@ export class ChatService implements Resolve<any>
 
                     // console.log(user);
                     this.socket = io(environment.SOCKET_URL, { query: `agentID=${user.id}` });
-                    this.addContactFromCookie();
+                    this.getContactsFromAPI();
 
                     this.headers = {
                         'x-access-token':
@@ -392,45 +392,27 @@ export class ChatService implements Resolve<any>
         else {
             this.onChatSelected.next(null);
         }
-        // remove from cookie
-        const { CONTACT_COOKIES } = environment;
-        const contactCookie = decodeURIComponent(this.cookieService.get(CONTACT_COOKIES));
-        if (contactCookie) {
-            const contactMessageArr = JSON.parse(contactCookie);
-            if (contactMessageArr && contactMessageArr.length > 0) {
-                const newContactArr = contactMessageArr.filter(c => c !== contactId);
-                this.cookieService.set(CONTACT_COOKIES, newContactArr.length > 0 ? JSON.stringify(newContactArr) : null);
-            }
-        }
+
     }
 
-    async addContactFromCookie(): Promise<any> {
+    async getContactsFromAPI(): Promise<any> {
         // var chatList = [];
-        const { CONTACT_COOKIES, API_URL } = environment;
-        const contactCookie = decodeURIComponent(this.cookieService.get(CONTACT_COOKIES));
-        // console.log(contactCookie);
+        const { API_URL } = environment;
 
-        if (contactCookie) {
-            const contactMessageArr = JSON.parse(contactCookie);
-            if (contactMessageArr && contactMessageArr.length > 0) {
-                for (const item of contactMessageArr) {
-                    let response: any = await this._httpClient.get(API_URL + '/contactmessage/' + item, this.headers).toPromise();
-                    console.log(response);
-                    if (response && response.result) {
-                        const { ID, SenderName } = response.result;
-                        const contact = {
-                            chatId: ID,
-                            contactId: ID,
-                            status: 'online',
-                            name: SenderName,
-                            avatar: 'assets/images/avatars/profile.jpg'
-                        };
-                        this.addContact(contact);
-                    }
-                    else {
-                        console.log(`Can not found contact message ${item}`);
-                    }
-                }
+        const resp: any = await this._httpClient.get(API_URL + '/token/' + this.user.id).toPromise();
+        console.log(resp);
+        if (resp && resp.result) {
+            for (const item of resp.result) {
+
+                const { ContactMessageID, SenderName } = item;
+                const contact = {
+                    chatId: ContactMessageID,
+                    contactId: ContactMessageID,
+                    status: 'online',
+                    name: SenderName,
+                    avatar: 'assets/images/avatars/profile.jpg'
+                };
+                this.addContact(contact);
             }
         }
     }
@@ -444,12 +426,11 @@ export class ChatService implements Resolve<any>
     async updateAgentStatus(online): Promise<any> {
         const { API_URL } = environment;
 
-        this._httpClient.post(API_URL + '/online', {
+        const response = this._httpClient.post(API_URL + '/online', {
             agentID: this.user.id,
             online
-        }, this.headers).toPromise().then(res => {
-            console.log(res);
-        });
+        }, { headers: this.headers }).toPromise();
+
     }
 
 }

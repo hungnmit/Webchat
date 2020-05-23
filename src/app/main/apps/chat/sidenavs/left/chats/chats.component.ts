@@ -97,18 +97,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                     name,
                     avatar: 'assets/images/avatars/profile.jpg'
                 });
-                // add cookie
-                const { CONTACT_COOKIES } = environment;
-                const contactCookie = this.cookieService.get(CONTACT_COOKIES);
-                let contactArr;
-                if (contactCookie) {
-                    contactArr = JSON.parse(contactCookie);
-                }
-                if (!(contactArr && contactArr.length > 0)) {
-                    contactArr = [];
-                }
-                contactArr.push(contactMessageID);
-                this.cookieService.set(CONTACT_COOKIES, contactArr.length > 0 ? JSON.stringify(contactArr) : null);
+               
             }
         });
 

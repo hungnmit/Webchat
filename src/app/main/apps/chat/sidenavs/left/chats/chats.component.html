@@ -57,7 +57,7 @@
 
             </div>
             <!-- / USER AVATAR -->
-
+            <!--
             <div>
                 <button mat-icon-button
                         [matMenuTriggerFor]="userMenu"
@@ -68,12 +68,14 @@
                     <button mat-menu-item (click)="changeLeftSidenavView('user')">
                         Profile
                     </button>
+              
                     <button mat-menu-item (click)="logout()">
                         Logout
                     </button>
+                    
                 </mat-menu>
             </div>
-
+            -->
         </mat-toolbar-row>
         <!-- / TOOLBAR TOP -->
 
@@ -211,7 +213,7 @@
 
         <!-- NO RESULTS MESSAGE -->
         <div *ngIf="(contacts | filter: searchText).length === 0" class="no-results-message">
-            No results..
+            
         </div>
         <!-- NO RESULTS MESSAGE-->
 

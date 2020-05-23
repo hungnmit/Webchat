@@ -219,7 +219,6 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 message: data.message,
                 time: new Date().toISOString()
             };
-
             // Add the message to the chat
             this.dialog.push(message);
 

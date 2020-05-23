@@ -54,6 +54,23 @@ export class ChatComponent implements OnInit, OnDestroy {
             .subscribe(chatData => {
                 this.selectedChat = chatData;
             });
+
+        // window.addEventListener('beforeunload', (e) => {
+        //     alert(123);
+        //     const { user } = this._chatService;
+
+        //     if (user && user.chatList && user.chatList.length > 0) {
+        //         const result = confirm('Are you sure to disconnect with current contacts?');
+        //         if (result) {
+        //             user.chatList.forEach(element => {
+        //                 this._chatService.completeConversation(element.contactId);
+        //             });
+        //             this._chatService.updateAgentStatus(false);
+        //             this._chatService.closeSocket();
+        //         }
+        //     }
+        // });
+
     }
 
     /**
@@ -63,6 +80,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next();
         this._unsubscribeAll.complete();
+
         this._chatService.updateAgentStatus(false);
         this._chatService.closeSocket();
     }

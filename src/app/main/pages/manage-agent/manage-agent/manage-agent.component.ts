@@ -197,8 +197,7 @@ export class ManageAgentComponent implements OnInit {
             let formTemp: FormGroup = null;
             formTemp = formData.getRawValue();
             var agentInQueue = formTemp['agentInQueue'];
-            if(typeof agentInQueue === "string")
-            {
+            if (typeof agentInQueue === "string") {
               formTemp['agentInQueue'] = agentInQueue.split(", ");
             }
             this.UpdateAgent(formTemp);
@@ -229,7 +228,7 @@ export class ManageAgentComponent implements OnInit {
       }
     });
   };
-  
+
   //event delete button
   onDeleteConfirm(event): void {
     if (window.confirm('Are you sure you want to delete?')) {
