@@ -27,6 +27,8 @@ import { ManageAgentModule } from 'app/main/pages/manage-agent/manage-agent.modu
 
 import { JwtInterceptor, ErrorInterceptor } from '../../_helpers';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AgentManageModule } from 'app/main/pages/agent-manage/agent-manage.module';
+import { ContactsModule } from './agent-manage/contacts/contacts.module';
 
 @NgModule({
     imports: [
@@ -74,6 +76,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
         ManageQueueModule,
         ManageAgentModule,
+        AgentManageModule,
+        ContactsModule,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

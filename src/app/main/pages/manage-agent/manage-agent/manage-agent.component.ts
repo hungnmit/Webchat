@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AgentFormDialogComponent } from './agent-form/agent-form.component';
 import { FormGroup } from '@angular/forms';
 import { Agent } from './agent.model';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-manage-agent',
@@ -104,6 +105,7 @@ export class ManageAgentComponent implements OnInit {
   //Get data from table agent
 
   renderValue: string;
+  private filesToUpload = null;
 
   constructor(
     private http: HttpClient,
@@ -246,6 +248,58 @@ export class ManageAgentComponent implements OnInit {
     }
   };
 
+  dataString = null;
+  
+  selectImage(event) {
+    if (event.target.files.length > 0) {
+      //const file = event.target.files[0];
+      //this.filesToUpload = file;
+      let workBook = null;
+      let jsonData = null;
+      const reader = new FileReader();
+      const file = event.target.files[0];
+      reader.onload = (event) => {
+        this.dataString = null;
+        const data = reader.result;
+        workBook = XLSX.read(data, { type: 'binary' });
+        jsonData = workBook.SheetNames.reduce((initial, name) => {
+          var firstSheet = workBook.SheetNames[0];
+          //Read all rows from First Sheet into an JSON array.
+          var excelRows = XLSX.utils.sheet_to_json(workBook.Sheets[firstSheet]);
+          // const sheet = workBook.Sheets[name];
+          // initial[name] = XLSX.utils.sheet_to_json(sheet);
+          return excelRows;
+        }, {});
+        //this.dataString = JSON.stringify(jsonData);
+        this.dataString = jsonData;
+
+    }
+    reader.readAsBinaryString(file);
+    }
+  };
+
+  Import(): void{
+    this.http.post<Agent[]>(`${environment.API_URL}/importFileAgent`, this.dataString).subscribe(result => {
+      this.LoadAgents();
+    }, (err: HttpErrorResponse) => {
+      if (err.error instanceof Error) {
+        console.log("Client-side error occured.");
+      } else {
+        console.log("Server-side error occured.");
+      }
+    });
+  };
+
+  ExportTOExcel()
+  {
+    const ws: XLSX.WorkSheet=XLSX.utils.table_to_sheet(this.source.nativeElement);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    
+    /* save to file */
+    XLSX.writeFile(wb, 'SheetJS.xlsx');
+    
+  }
   //event create button
   // onCreateConfirm(event): void {
   //   if (window.confirm('Are you sure you want to add new agent?')) {

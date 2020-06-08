@@ -87,6 +87,12 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy 
                         type : 'item',
                         icon : 'format_list_numbered_rtl',
                         url  : '/pages/manage-queue'
+                    },
+                    {
+                        title: 'Agents',
+                        type : 'item',
+                        icon : 'supervised_user_circle',
+                        url  : '/pages/agents'
                     }
                 ];
             }

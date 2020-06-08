@@ -2,12 +2,12 @@ import { FuseNavigation } from '@fuse/types';
 
 export const navigation: FuseNavigation[] = [
     {
-        id       : 'applications',
-        title    : 'Applications',
+        id: 'applications',
+        title: 'Applications',
         translate: 'NAV.APPLICATIONS',
-        type     : 'group',
-        icon     : 'apps',
-        children : [
+        type: 'group',
+        icon: 'apps',
+        children: [
             // {
             //     id       : 'dashboards',
             //     title    : 'Dashboards',
@@ -111,13 +111,13 @@ export const navigation: FuseNavigation[] = [
             //     }
             // },
             {
-                id       : 'chat',
-                title    : 'Chat',
+                id: 'chat',
+                title: 'Chat',
                 translate: 'NAV.CHAT',
-                type     : 'item',
-                icon     : 'chat',
-                url      : '/apps/chat',
-               
+                type: 'item',
+                icon: 'chat',
+                url: '/apps/chat',
+
             },
             // {
             //     id       : 'file-manager',
@@ -159,24 +159,62 @@ export const navigation: FuseNavigation[] = [
         ]
     },
     {
-        id      : 'pages',
-        title   : 'Pages',
-        type    : 'group',
-        icon    : 'pages',
+        id: 'pages',
+        title: 'Pages',
+        type: 'group',
+        icon: 'pages',
         children: [
             {
-                id   : 'manage-agent',
+                id: 'manage-agent',
                 title: 'Manage Agent',
-                type : 'item',
-                icon : 'supervised_user_circle',
-                url  : '/pages/manage-agent'
+                type: 'item',
+                icon: 'supervised_user_circle',
+                url: '/pages/manage-agent'
             },
             {
-                id   : 'manage-queue',
+                id: 'manage-queue',
                 title: 'Manage Queue',
-                type : 'item',
-                icon : 'format_list_numbered_rtl',
-                url  : '/pages/manage-queue'
+                type: 'item',
+                icon: 'format_list_numbered_rtl',
+                url: '/pages/manage-queue'
+            },
+            {
+                id: 'products',
+                title: 'Manage Agent',
+                type: 'item',
+                url: '/pages/agents',
+                exactMatch: true,
+                icon: 'supervised_user_circle',
+                // children: [
+                //     {
+                //         id: 'products',
+                //         title: 'Products',
+                //         type: 'item',
+                //         url: '/pages/products',
+                //         exactMatch: true
+                //     },
+                //     {
+                //         id: 'productDetail',
+                //         title: 'Product Detail',
+                //         type: 'item',
+                //         url: '/pages/products/1/printed-dress',
+                //         exactMatch: true
+                //     },
+                //     {
+                //         id: 'orders',
+                //         title: 'Orders',
+                //         type: 'item',
+                //         url: '/pages/orders',
+                //         exactMatch: true
+                //     },
+                //     {
+                //         id: 'orderDetail',
+                //         title: 'Order Detail',
+                //         type: 'item',
+                //         url: '/pages/orders/1',
+                //         exactMatch: true
+                //     }
+                // ]
             },
             // {
             //     id      : 'authentication',
