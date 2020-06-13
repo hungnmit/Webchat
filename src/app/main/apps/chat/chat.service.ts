@@ -71,7 +71,6 @@ export class ChatService implements Resolve<any>
                         'x-access-token':
                             this.authenticateService.currentUserValue.token
                     };
-
                     resolve();
                 },
                 reject
@@ -432,6 +431,8 @@ export class ChatService implements Resolve<any>
         }, { headers: this.headers }).toPromise();
 
     }
+
+    
 
 }
 

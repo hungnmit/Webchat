@@ -97,10 +97,12 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
                     name,
                     avatar: 'assets/images/avatars/profile.jpg'
                 });
-               
+                this.createNotification(name);
             }
         });
 
+
+        this.requestNotificationPermission();
     }
 
     /**
@@ -124,7 +126,7 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     getChat(contact): void {
         this._chatService.getChat(contact);
-        
+
         if (!this._mediaObserver.isActive('gt-md')) {
             this._fuseMatSidenavHelperService.getSidenav('chat-left-sidenav').toggle();
         }
@@ -153,5 +155,23 @@ export class ChatChatsSidenavComponent implements OnInit, OnDestroy {
      */
     logout(): void {
         console.log('logout triggered');
+    }
+
+    requestNotificationPermission(): void {
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission();
+        }
+
+    }
+
+    createNotification(name): void {
+        const n = new Notification(`You are connected with ${name}`, {
+            icon: 'https://img.icons8.com/bubbles/50/000000/user.png',
+            body: ''
+        });
+
+        n.onclick = (event) => {
+            window.focus();
+        };
     }
 }

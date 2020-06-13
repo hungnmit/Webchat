@@ -21,6 +21,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     contact: any;
     replyInput: any;
     selectedChat: any;
+    
 
     @ViewChild(FusePerfectScrollbarDirective, { static: false })
     directiveScroll: FusePerfectScrollbarDirective;
@@ -54,6 +55,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
      * On init
      */
     ngOnInit(): void {
+        
         this.user = this._chatService.user;
         this._chatService.onChatSelected
             .pipe(takeUntil(this._unsubscribeAll))
@@ -213,6 +215,7 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
     replyAgent(data): void {
         const { contactId } = this.contact;
         console.log(`replyAgent : ${JSON.stringify(data)}`);
+
         if (data.contactMessageID === contactId) {
             const message = {
                 who: contactId,
@@ -230,10 +233,13 @@ export class ChatViewComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.readyToReply();
             });
         }
-        this._chatService.setUnreadStatus(data.contactMessageID);
+        
+        
     }
 
     completeConversation(): void {
         this._chatService.completeConversation(this.contact);
     }
+
+    
 }

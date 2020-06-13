@@ -1,12 +1,13 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, HostListener } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, window } from 'rxjs/operators';
 
 import { fuseAnimations } from '@fuse/animations';
 
 import { ChatService } from 'app/main/apps/chat/chat.service';
 import { AuthenticationService } from 'app/_services';
 import { Router } from '@angular/router';
+import { environment } from 'environments/environment.prod'
 
 @Component({
     selector: 'chat',
@@ -17,6 +18,7 @@ import { Router } from '@angular/router';
 })
 export class ChatComponent implements OnInit, OnDestroy {
     selectedChat: any;
+    blinkInterval: any;
 
     // Private
     private _unsubscribeAll: Subject<any>;
@@ -33,6 +35,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
+
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -55,22 +58,24 @@ export class ChatComponent implements OnInit, OnDestroy {
                 this.selectedChat = chatData;
             });
 
-        // window.addEventListener('beforeunload', (e) => {
-        //     alert(123);
-        //     const { user } = this._chatService;
+        this._chatService.on(environment.USER_SEND_AGENT, data => {
+            const contact = this._chatService.contacts.find(c => c.chatId === data.contactMessageID);
+            console.log(`COntact: ${JSON.stringify(this._chatService.contacts)},,,, ${data.contactMessageID}`);
+            if (contact) {
+                this._chatService.setUnreadStatus(data.contactMessageID);
+                this.playSound();
+                this.blink('New message', contact.name, 700);
+            }
 
-        //     if (user && user.chatList && user.chatList.length > 0) {
-        //         const result = confirm('Are you sure to disconnect with current contacts?');
-        //         if (result) {
-        //             user.chatList.forEach(element => {
-        //                 this._chatService.completeConversation(element.contactId);
-        //             });
-        //             this._chatService.updateAgentStatus(false);
-        //             this._chatService.closeSocket();
-        //         }
-        //     }
-        // });
+        });
 
+
+
+    }
+
+    @HostListener('window:focus', ['$event'])
+    onFocus(event): void {
+        this.setDefaultTitle();
     }
 
     /**
@@ -83,5 +88,34 @@ export class ChatComponent implements OnInit, OnDestroy {
 
         this._chatService.updateAgentStatus(false);
         this._chatService.closeSocket();
+    }
+
+
+    playSound(): void {
+        const audio = new Audio();
+        audio.src = '../../../../../assets/sound/messenger.mp3';
+        audio.load();
+        audio.play();
+    }
+
+    blink(title1, title2, timeout): void {
+        const title = document.title;
+        title2 = title2 || title;
+        timeout = timeout || 1000;
+
+        document.title = title1;
+        clearInterval(this.blinkInterval);
+        this.blinkInterval = setInterval(() => {
+            if (document.title === title1) {
+                document.title = title2;
+            } else {
+                document.title = title1;
+            }
+        }, timeout);
+    }
+
+    setDefaultTitle(): void {
+        clearInterval(this.blinkInterval);
+        document.title = 'Web App Chatbot';
     }
 }
