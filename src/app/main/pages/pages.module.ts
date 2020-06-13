@@ -27,7 +27,10 @@ import { ManageAgentModule } from 'app/main/pages/manage-agent/manage-agent.modu
 
 import { JwtInterceptor, ErrorInterceptor } from '../../_helpers';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-
+import { AgentManageModule } from 'app/main/pages/agent-manage/agent-manage.module';
+import { ContactsModule } from './agent-manage/contacts/contacts.module';
+import { QueueManageModule } from './queue-manage/queue-manage.module';
+import { InfosModule } from './queue-manage/infos/infos.module';
 @NgModule({
     imports: [
         // Authentication
@@ -71,14 +74,16 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
         // // Knowledge base
         // KnowledgeBaseModule,
-
-        ManageQueueModule,
-        ManageAgentModule,
+        //ManageQueueModule,
+        //ManageAgentModule,
+        QueueManageModule,
+        AgentManageModule,
+        ContactsModule,
+        InfosModule,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
         // provider used to create fake backend
     ],
 })

@@ -1,0 +1,97 @@
+<mat-table #table [dataSource]="dataSource"
+           [@animateStagger]="{value:'50'}">
+    <!-- Checkbox Column -->
+    <!-- <ng-container matColumnDef="checkbox">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let info">
+            <mat-checkbox [(ngModel)]="checkboxes[info.id]" (ngModelChange)="onSelectedChange(info.id)"
+                          (click)="$event.stopPropagation()">
+            </mat-checkbox>
+        </mat-cell>
+    </ng-container> -->
+
+    <!-- Avatar Column -->
+    <ng-container matColumnDef="avatar">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let info">
+            <img class="avatar"
+                 src="assets/images/avatars/profile.jpg"/>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef>ID</mat-header-cell>
+        <mat-cell *matCellDef="let info">
+            <p class="text-truncate font-weight-600">{{info.id}}</p>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Category Column -->
+    <ng-container matColumnDef="category">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-md>Date Received
+        </mat-header-cell>
+        <mat-cell *matCellDef="let info" fxHide fxShow.gt-md>
+            <p class="category text-truncate">
+                {{info.dateReceived | date:'MM/dd/yyyy'}}
+            </p>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="quantity">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-sm>Talking</mat-header-cell>
+        <mat-cell *matCellDef="let info" fxHide fxShow.gt-sm>
+
+            <!-- <span class="quantity-indicator text-truncate"
+                [ngClass]="{'red-500':product.quantity <= 5, 'amber-500':product.quantity > 5 && product.quantity <= 25,'green-600':product.quantity > 25}">
+            </span> -->
+            <span>
+                {{info.talking}}
+            </span>
+
+        </mat-cell>
+    </ng-container>
+    <!-- Active Column -->
+    <ng-container matColumnDef="active">
+        <mat-header-cell *matHeaderCellDef fxHide fxShow.gt-xs>Status</mat-header-cell>
+        <mat-cell *matCellDef="let info" fxHide fxShow.gt-xs>
+            <mat-icon *ngIf="info.online" class="active-icon green-600 s-16">check</mat-icon>
+            <mat-icon *ngIf="!info.online" class="active-icon red-500 s-16">close</mat-icon>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Buttons Column -->
+    <ng-container matColumnDef="buttons">
+        <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+        <mat-cell *matCellDef="let info">
+            <div fxFlex="row" fxLayoutAlign="end center">
+                <button mat-icon-button (click)="$event.stopPropagation();toggleStar(info.id)" aria-label="Toggle star">
+                    <mat-icon class="amber-fg" *ngIf="AgentInQueue.includes(info.id)">star</mat-icon>
+                    <mat-icon class="secondary-text" *ngIf="!AgentInQueue.includes(info.id)">star_border</mat-icon>
+                </button>
+
+                <!-- <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"
+                        (click)="$event.stopPropagation();">
+                    <mat-icon class="secondary-text">more_vert</mat-icon>
+                </button> -->
+
+                <!-- <mat-menu #moreMenu="matMenu">
+                    <button mat-menu-item aria-label="remove" (click)="deleteInfo(info)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Remove</span>
+                    </button>
+                </mat-menu> -->
+            </div>
+
+        </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let info; columns: displayedColumns;"
+             class="info"
+             [ngClass]="{'accent-50':checkboxes[info.id]}"
+             matRipple
+             [@animate]="{value:'*',params:{y:'100%'}}">
+    </mat-row>
+</mat-table>
+
+

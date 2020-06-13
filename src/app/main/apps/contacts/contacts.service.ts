@@ -7,7 +7,9 @@ import { FuseUtils } from '@fuse/utils';
 
 import { Contact } from 'app/main/apps/contacts/contact.model';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ContactsService implements Resolve<any>
 {
     onContactsChanged: BehaviorSubject<any>;

@@ -73,7 +73,7 @@ export class AgentFormDialogComponent {
       password: [this.agent.password],
       dateReceived: [this.agent.dateReceived],
       //online: [this.agent.online],
-      talking: [this.agent.talking],
+      //talking: [this.agent.talking],
       agentInQueue: [this.agent.agentInQueue],
     });
   }

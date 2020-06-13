@@ -76,17 +76,29 @@ export class FuseShortcutsComponent implements OnInit, AfterViewInit, OnDestroy 
             if (this.authenticationService.isAdmin) {
                 // User's shortcut items
                 this.shortcutItems = [
+                    // {
+                    //     title: 'Manage Agent',
+                    //     type : 'item',
+                    //     icon : 'supervised_user_circle',
+                    //     url  : '/pages/manage-agent'
+                    // },
+                    // {
+                    //     title: 'Manage Queue',
+                    //     type : 'item',
+                    //     icon : 'format_list_numbered_rtl',
+                    //     url  : '/pages/manage-queue'
+                    // },
                     {
-                        title: 'Manage Agent',
+                        title: 'Agents',
                         type : 'item',
                         icon : 'supervised_user_circle',
-                        url  : '/pages/manage-agent'
+                        url  : '/pages/agents'
                     },
                     {
-                        title: 'Manage Queue',
+                        title: 'Queues',
                         type : 'item',
                         icon : 'format_list_numbered_rtl',
-                        url  : '/pages/manage-queue'
+                        url  : '/pages/queues'
                     }
                 ];
             }
