@@ -19,10 +19,10 @@ import { AgmCoreModule } from '@agm/core';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseWidgetModule } from '@fuse/components/widget/widget.module';
 
-import { ManageAgentsComponent } from 'app/main/pages/agent-manage/agents/agents.component';
-import { ManageAgentsService } from 'app/main/pages/agent-manage/agents/agents.service';
-import { ManageAgentComponent } from 'app/main/pages/agent-manage/agent/agent.component';
-import { ManageAgentService } from 'app/main/pages/agent-manage/agent/agent.service';
+import { ManageQueuesComponent } from 'app/main/pages/queue-manage/queues/queues.component';
+import { ManageQueuesService } from 'app/main/pages/queue-manage/queues/queues.service';
+import { ManageQueueComponent } from 'app/main/pages/queue-manage/queue/queue.component';
+import { ManageQueueService } from 'app/main/pages/queue-manage/queue/queue.service';
 // import { EcommerceOrdersComponent } from 'app/main/pages/e-commerce/orders/orders.component';
 // import { EcommerceOrdersService } from 'app/main/pages/e-commerce/orders/orders.service';
 // import { EcommerceOrderComponent } from 'app/main/pages/e-commerce/order/order.component';
@@ -34,88 +34,61 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FuseConfirmDialogModule, FuseSidebarModule } from '@fuse/components';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ContactsModule } from './contacts/contacts.module';
-import { ContactsComponent } from './contacts/contacts.component';
-import { ContactsContactListComponent } from './contacts/contact-list/contact-list.component';
-import { ContactsMainSidebarComponent } from './contacts/sidebars/main/main.component';
-import { ContactsSelectedBarComponent } from './contacts/selected-bar/selected-bar.component';
-import { ContactsContactFormDialogComponent } from './contacts/contact-form/contact-form.component';
-import { ContactsService } from './contacts/contacts.service';
+
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { InfosComponent } from './infos/infos.component';
+import { InfosInfoListComponent } from './infos/info-list/info-list.component';
+import { InfosSelectedBarComponent } from './infos/info-selected-bar/info-selected-bar.component';
+import { InfosMainSidebarComponent } from './infos/sidebars/main/info-main.component';
 //import { MaterialFileInputModule } from 'ngx-material-file-input';
+import { InfosService } from './infos/infos.service';
+import { InfosModule } from './infos/infos.module';
 
 const routes: Routes = [
     {
-        path     : 'agents',
-        component: ManageAgentsComponent,
+        path     : 'queues',
+        component: ManageQueuesComponent,
         resolve  : {
-            data: ManageAgentsService,ContactsService
+            data: ManageQueuesService,InfosService
         },
         canActivate: [AuthGuard],
         data: { roles: [Role.Admin] }
     },
     {
-        path     : 'agents/:id',
-        component: ManageAgentComponent,
+        path     : 'queues/:id',
+        component: ManageQueueComponent,
         resolve  : {
-            data: ManageAgentService,ContactsService
+            data: ManageQueueService,InfosService
         },
         canActivate: [AuthGuard],
         data: { roles: [Role.Admin] }
     },
     {
-        path     : 'agents/:id/:handle',
-        component: ManageAgentComponent,
+        path     : 'queues/:id/:handle',
+        component: ManageQueueComponent,
         resolve  : {
-            data: ManageAgentService,ContactsService
+            data: ManageQueueService,InfosService
         },
         canActivate: [AuthGuard],
         data: { roles: [Role.Admin] }
     },
-    // {
-    //     path: 'queueinagent',
-    //     loadChildren: () => import('./contacts/contacts.module').then(m => m.ContactsModule)
-    // },
     {
-        path     : 'agents/queue',
-        loadChildren: () => import('./contacts/contacts.module').then(m => m.ContactsModule)
-        // component: ContactsComponent,
-        // resolve  : {
-        //     contacts: ContactsService
-        // }
+        path     : 'queues/agent',
+        loadChildren: () => import('./infos/infos.module').then(m => m.InfosModule)
     }
-    // {
-    //     path     : 'orders',
-    //     component: EcommerceOrdersComponent,
-    //     resolve  : {
-    //         data: EcommerceOrdersService
-    //     },
-    //     canActivate: [AuthGuard],
-    //     data: { roles: [Role.Admin] }
-    // },
-    // {
-    //     path     : 'orders/:id',
-    //     component: EcommerceOrderComponent,
-    //     resolve  : {
-    //         data: EcommerceOrderService
-    //     },
-    //     canActivate: [AuthGuard],
-    //     data: { roles: [Role.Admin] }
-    // }
 ];
 
 @NgModule({
     declarations: [
-        ManageAgentsComponent,
-        ManageAgentComponent,
+        ManageQueuesComponent,
+        ManageQueueComponent,
         // EcommerceOrdersComponent,
         // EcommerceOrderComponent
 
-        ContactsComponent,
-        ContactsContactListComponent,
-        ContactsSelectedBarComponent,
-        ContactsMainSidebarComponent,
-        ContactsContactFormDialogComponent
+        InfosComponent,
+        InfosInfoListComponent,
+        InfosSelectedBarComponent,
+        InfosMainSidebarComponent,
     ],
     imports     : [
         RouterModule.forChild(routes),
@@ -135,12 +108,9 @@ const routes: Routes = [
         MatTableModule,
         MatTabsModule,
         MatDatepickerModule,
-        //ContactsModule,
+        //InfosModule,
 
         NgxChartsModule,
-        AgmCoreModule.forRoot({
-            apiKey: 'AIzaSyD81ecsCj4yYpcXSLFcYU97PvRsE_X8Bx8'
-        }),
 
         FuseSharedModule,
         FuseWidgetModule,
@@ -155,15 +125,15 @@ const routes: Routes = [
         FuseSidebarModule
     ],
     providers   : [
-        ManageAgentsService,
-        ManageAgentService,
+        ManageQueuesService,
+        ManageQueueService,
         // EcommerceOrdersService,
         // EcommerceOrderService       
     ],
     entryComponents: [
-        ContactsContactFormDialogComponent
+        //InfosInfoFormDialogComponent
     ]
 })
-export class AgentManageModule
+export class QueueManageModule
 {
 }

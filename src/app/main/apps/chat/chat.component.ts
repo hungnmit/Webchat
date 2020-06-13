@@ -45,7 +45,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // redirect to chat if logged is not admin
         if (this.authenticationService.isAdmin) {
-            this.router.navigate(['/pages/manage-agent']);
+            this.router.navigate(['/pages/agents']);
         }
         console.log(`agent: ${JSON.stringify(this._chatService.user)}`);
         this._chatService.updateAgentStatus(true);

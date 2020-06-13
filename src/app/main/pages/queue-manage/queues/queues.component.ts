@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { DataSource } from '@angular/cdk/collections';
@@ -8,7 +8,7 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseUtils } from '@fuse/utils';
 
-import { ManageAgentsService } from 'app/main/pages/agent-manage/agents/agents.service';
+import { ManageQueuesService } from 'app/main/pages/queue-manage/queues/queues.service';
 import { takeUntil } from 'rxjs/internal/operators';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FuseConfirmDialogComponent } from '@fuse/components/confirm-dialog/confirm-dialog.component';
@@ -16,21 +16,21 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 // import { FileInput } from 'ngx-material-file-input';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'environments/environment.prod';
-import { Agent } from './agent.model';
+import { Queue } from './queue.model';
 import * as XLSX from 'xlsx';
 import { PeriodicElement } from 'assets/angular-material-examples/table-basic/table-basic-example';
 
 @Component({
-    selector     : 'manage-agents',
-    templateUrl  : './agents.component.html',
-    styleUrls    : ['./agents.component.scss'],
+    selector     : 'manage-queues',
+    templateUrl  : './queues.component.html',
+    styleUrls    : ['./queues.component.scss'],
     animations   : fuseAnimations,
     encapsulation: ViewEncapsulation.None
 })
-export class ManageAgentsComponent implements OnInit
+export class ManageQueuesComponent implements OnInit
 {
     dataSource: FilesDataSource | null;
-    displayedColumns = ['id', 'image', 'name', 'category', 'quantity', 'active', 'action'];
+    displayedColumns = ['id', 'image', 'name', 'category', 'action'];
 
     @ViewChild(MatPaginator, {static: true})
     paginator: MatPaginator;
@@ -48,11 +48,10 @@ export class ManageAgentsComponent implements OnInit
     private _unsubscribeAll: Subject<any>;
 
     constructor(
-        private _manageAgentsServiceService: ManageAgentsService,
+        private _manageQueuesServiceService: ManageQueuesService,
         public _matDialog: MatDialog,
         private _matSnackBar: MatSnackBar,
         private _httpClient: HttpClient,
-        private changeDetectorRefs: ChangeDetectorRef
     )
     {
         // Set the private defaults
@@ -68,31 +67,13 @@ export class ManageAgentsComponent implements OnInit
      */
     ngOnInit(): void
     {
-        this.loadAgents();
+        this.loadQueues();
     }
-    loadAgents(){
-
-        fromEvent(this.filter.nativeElement, 'keyup')
-        .pipe(
-            takeUntil(this._unsubscribeAll),
-            debounceTime(150),
-            distinctUntilChanged()
-        )
-        .subscribe(() => {
-            if ( !this.dataSource )
-            {
-                return;
-            }
-
-            this.dataSource.filter = this.filter.nativeElement.value;
-        });
-        this._manageAgentsServiceService.resolve();
-        this.dataSource = new FilesDataSource(this._manageAgentsServiceService, this.paginator, this.sort);   
-    }
+    
     /**
-     * Delete Agent
+     * Delete Queue
      */
-    deleteAgent(idAagent : number): void
+    deleteQueue(idAqueue : number): void
     {
         this.confirmDialogRef = this._matDialog.open(FuseConfirmDialogComponent, {
             disableClose: false
@@ -103,18 +84,39 @@ export class ManageAgentsComponent implements OnInit
         this.confirmDialogRef.afterClosed().subscribe(result => {
             if ( result )
             {
-                this._manageAgentsServiceService.deleteAgent(idAagent);
+                this._manageQueuesServiceService.deleteQueue(idAqueue);
                 // Show the success message
-                this._manageAgentsServiceService.resolve();
-                this.loadAgents();
-                this._matSnackBar.open('Agent deleted', 'OK', {
+                this._matSnackBar.open('Queue deleted', 'OK', {
                     verticalPosition: 'top',
                     horizontalPosition: 'right',
                     duration: 2000
                 });
+                this._manageQueuesServiceService.resolve();
+                this.loadQueues();
             }
             this.confirmDialogRef = null;
         });
+    }
+
+    loadQueues(){
+        this._manageQueuesServiceService.resolve();
+
+        this.dataSource = new FilesDataSource(this._manageQueuesServiceService, this.paginator, this.sort);
+
+        fromEvent(this.filter.nativeElement, 'keyup')
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                //debounceTime(150),
+                distinctUntilChanged()
+            )
+            .subscribe(() => {
+                if ( !this.dataSource )
+                {
+                    return;
+                }
+
+                this.dataSource.filter = this.filter.nativeElement.value;
+            });
     }
 
     dataString = null;
@@ -154,7 +156,7 @@ export class ManageAgentsComponent implements OnInit
 
     Import(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this._httpClient.post<Agent[]>(`${environment.API_URL}/importFileAgent`, this.dataString)
+            this._httpClient.post<Queue[]>(`${environment.API_URL}/importFileQueue`, this.dataString)
                 .subscribe((response: any) => {
                     if (response.result) {
                         // Show the success message
@@ -163,8 +165,8 @@ export class ManageAgentsComponent implements OnInit
                             horizontalPosition: 'right',
                             duration: 2000
                         });
-                        this._manageAgentsServiceService.resolve();
-                        this.loadAgents();
+                        this._manageQueuesServiceService.resolve();
+                        this.loadQueues();
                         resolve(response);
                     }
                     else {
@@ -178,7 +180,7 @@ export class ManageAgentsComponent implements OnInit
         });
     }
 
-    fileName= 'AgentsSheet.xlsx';
+    fileName= 'QueuesSheet.xlsx';
     ExportFile() 
     {
        /* table id is passed over here */   
@@ -202,19 +204,19 @@ export class FilesDataSource extends DataSource<any>
     /**
      * Constructor
      *
-     * @param {ManageAgentsService} _manageAgentsServiceService
+     * @param {ManageQueuesService} _manageQueuesServiceService
      * @param {MatPaginator} _matPaginator
      * @param {MatSort} _matSort
      */
     constructor(
-        private _manageAgentsServiceService: ManageAgentsService,
+        private _manageQueuesServiceService: ManageQueuesService,
         private _matPaginator: MatPaginator,
         private _matSort: MatSort
     )
     {
         super();
 
-        this.filteredData = this._manageAgentsServiceService.agents;
+        this.filteredData = this._manageQueuesServiceService.queues;
     }
 
     /**
@@ -225,7 +227,7 @@ export class FilesDataSource extends DataSource<any>
     connect(): Observable<any[]>
     {
         const displayDataChanges = [
-            this._manageAgentsServiceService.onAgentsChanged,
+            this._manageQueuesServiceService.onQueuesChanged,
             this._matPaginator.page,
             this._filterChange,
             this._matSort.sortChange
@@ -234,7 +236,7 @@ export class FilesDataSource extends DataSource<any>
         return merge(...displayDataChanges)
             .pipe(
                 map(() => {
-                        let data = this._manageAgentsServiceService.agents.slice();
+                        let data = this._manageQueuesServiceService.queues.slice();
 
                         data = this.filterData(data);
 

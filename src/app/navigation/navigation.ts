@@ -164,22 +164,22 @@ export const navigation: FuseNavigation[] = [
         type: 'group',
         icon: 'pages',
         children: [
+            // {
+            //     id: 'manage-agent',
+            //     title: 'Manage Agent',
+            //     type: 'item',
+            //     icon: 'supervised_user_circle',
+            //     url: '/pages/manage-agent'
+            // },
+            // {
+            //     id: 'manage-queue',
+            //     title: 'Manage Queue',
+            //     type: 'item',
+            //     icon: 'format_list_numbered_rtl',
+            //     url: '/pages/manage-queue'
+            // },
             {
-                id: 'manage-agent',
-                title: 'Manage Agent',
-                type: 'item',
-                icon: 'supervised_user_circle',
-                url: '/pages/manage-agent'
-            },
-            {
-                id: 'manage-queue',
-                title: 'Manage Queue',
-                type: 'item',
-                icon: 'format_list_numbered_rtl',
-                url: '/pages/manage-queue'
-            },
-            {
-                id: 'products',
+                id: 'agent-manage',
                 title: 'Manage Agent',
                 type: 'item',
                 url: '/pages/agents',
@@ -215,6 +215,14 @@ export const navigation: FuseNavigation[] = [
                 //         exactMatch: true
                 //     }
                 // ]
+            },
+            {
+                id: 'queue-manage',
+                title: 'Manage Queue',
+                type: 'item',
+                url: '/pages/queues',
+                exactMatch: true,
+                icon: 'format_list_numbered_rtl',               
             },
             // {
             //     id      : 'authentication',

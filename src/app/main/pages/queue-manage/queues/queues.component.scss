@@ -1,13 +1,13 @@
 @import "src/@fuse/scss/fuse";
 
-e-commerce-orders {
+manage-queues {
 
-    #orders {
+    #queues {
 
         .top-bg {
 
-            @include media-breakpoint('xs') {
-                height: 224px;
+            @include media-breakpoint('lt-md') {
+                height: 256px;
             }
         }
 
@@ -44,34 +44,31 @@ e-commerce-orders {
                     }
                 }
 
-                @include media-breakpoint('xs') {
+                @include media-breakpoint('lt-md') {
                     padding: 8px 0;
-                    height: 160px !important;
-                    min-height: 160px !important;
-                    max-height: 160px !important;
+                    height: 192px !important;
+                    min-height: 192px !important;
+                    max-height: 192px !important;
                 }
             }
         }
     }
 
-    .mat-tab-group,
-    .mat-tab-body-wrapper,
-    .tab-content {
-        flex: 1 1 auto;
-        max-width: 100%;
-    }
-
-    .orders-table {
+    .queues-table {
         flex: 1 1 auto;
         border-bottom: 1px solid rgba(0, 0, 0, .12);
         overflow: auto;
         -webkit-overflow-scrolling: touch;
 
+        tr.mat-header-row, tr.mat-row {
+            display: flex;
+            border-bottom: inherit;
+            }
         .mat-header-row {
             min-height: 64px;
         }
 
-        .order {
+        .queue {
             position: relative;
             cursor: pointer;
             height: 84px;
@@ -90,14 +87,26 @@ e-commerce-orders {
         .mat-column-image {
             flex: 0 1 84px;
 
-            .product-image {
+            .queue-image {
                 width: 52px;
                 height: 52px;
                 border: 1px solid rgba(0, 0, 0, .12);
             }
         }
 
-        .mat-column-buttons {
+        .mat-column-category {
+            flex: 0 1 240px;
+        }
+
+        .mat-column-price {
+            flex: 0 1 160px;
+        }
+
+        .mat-column-quantity {
+            flex: 0 1 160px;
+        }
+
+        .mat-column-active {
             flex: 0 1 80px;
         }
 
@@ -118,5 +127,8 @@ e-commerce-orders {
         .active-icon {
             border-radius: 50%;
         }
+    }
+    .fileExcel{
+        width: 55%;
     }
 }

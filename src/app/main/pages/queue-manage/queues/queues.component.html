@@ -1,4 +1,4 @@
-<div id="agents" class="page-layout carded fullwidth inner-scroll">
+<div id="queues" class="page-layout carded fullwidth inner-scroll">
 
     <!-- TOP BACKGROUND -->
     <div class="top-bg accent"></div>
@@ -14,10 +14,10 @@
             <!-- APP TITLE -->
             <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
                 <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
-                    perm_contact_calendar
+                    queue
                 </mat-icon>
                 <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
-                    Manage Agent
+                    Manage Queue
                 </span>
             </div>
             <!-- / APP TITLE -->
@@ -26,7 +26,7 @@
             <div class="search-wrapper mx-32 mx-md-0">
                 <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
                     <mat-icon>search</mat-icon>
-                    <input #filter placeholder="Search for a agent">
+                    <input #filter placeholder="Search for a queue">
                 </div>
             </div>
             <!-- / SEARCH -->
@@ -37,9 +37,9 @@
             </button>
 
             <!-- ADD BUTTON -->
-            <button mat-raised-button [routerLink]="'/pages/agents/new'"
+            <button mat-raised-button [routerLink]="'/pages/queues/new'"
                 class="add-product-button fuse-white mt-24 mt-md-0">
-                <span>ADD NEW AGENT</span>
+                <span>ADD NEW QUEUE</span>
             </button>
             <!-- / ADD BUTTON -->
 
@@ -49,14 +49,14 @@
         <!-- CONTENT CARD -->
         <div class="content-card" #TABLE>
 
-            <mat-table class="agents-table" #table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}"
+            <mat-table class="queues-table" #table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}"
                 fusePerfectScrollbar>
 
                 <!-- ID Column -->
                 <ng-container matColumnDef="id">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
-                    <mat-cell *matCellDef="let agent">
-                        <p class="text-truncate">{{agent.id}}</p>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex: 0 1 10%;">ID</mat-header-cell>
+                    <mat-cell *matCellDef="let queue" style="flex: 0 1 10%;">
+                        <p class="text-truncate">{{queue.id}}</p>
                     </mat-cell>
                 </ng-container>
 
@@ -64,27 +64,27 @@
                 <ng-container matColumnDef="image">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
                     <mat-cell *matCellDef="let product">
-                        <img class="agent-image" *ngIf="product.featuredImageId" [alt]="product.name"
+                        <img class="queue-image" *ngIf="product.featuredImageId" [alt]="product.name"
                             [src]="product.images[product.featuredImageId].url" />
-                        <img class="avatar ng-tns-c252-88 ng-star-inserted" [src]="'assets/images/avatars/profile.jpg'">
+                        <img class="avatar ng-tns-c252-88 ng-star-inserted" [src]="'assets/images/ecommerce/product-image-placeholder.png'">
                     </mat-cell>
                 </ng-container>
 
                 <!-- Name Column -->
                 <ng-container matColumnDef="name">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header>Password</mat-header-cell>
-                    <mat-cell *matCellDef="let agent">
-                        <p class="text-truncate">{{agent.password}}</p>
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                    <mat-cell *matCellDef="let queue">
+                        <p class="text-truncate">{{queue.name}}</p>
                     </mat-cell>
                 </ng-container>
 
                 <!-- Category Column -->
                 <ng-container matColumnDef="category">
-                    <mat-header-cell *matHeaderCellDef fxHide mat-sort-header fxShow.gt-md>Date Received
+                    <mat-header-cell *matHeaderCellDef fxHide mat-sort-header style="flex: 0 1 30%;" fxShow.gt-md>Date Received
                     </mat-header-cell>
-                    <mat-cell *matCellDef="let agent" fxHide fxShow.gt-md>
+                    <mat-cell *matCellDef="let queue" fxHide style="flex: 0 1 30%;" fxShow.gt-md>
                         <p class="category text-truncate">
-                            {{agent.dateReceived | date:'MM/dd/yyyy'}}
+                            {{queue.dateReceived | date:'MM/dd/yyyy'}}
                         </p>
                     </mat-cell>
                 </ng-container>
@@ -100,35 +100,32 @@
                 </ng-container> -->
 
                 <!-- Quantity Column -->
-                <ng-container matColumnDef="quantity">
+                <!-- <ng-container matColumnDef="quantity">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Talking</mat-header-cell>
-                    <mat-cell *matCellDef="let agent" fxHide fxShow.gt-sm>
+                    <mat-cell *matCellDef="let queue" fxHide fxShow.gt-sm>
 
-                        <!-- <span class="quantity-indicator text-truncate"
-                            [ngClass]="{'red-500':product.quantity <= 5, 'amber-500':product.quantity > 5 && product.quantity <= 25,'green-600':product.quantity > 25}">
-                        </span> -->
                         <span>
-                            {{agent.talking}}
+                            {{queue.talking}}
                         </span>
 
                     </mat-cell>
-                </ng-container>
+                </ng-container> -->
 
                 <!-- Active Column -->
-                <ng-container matColumnDef="active">
+                <!-- <ng-container matColumnDef="active">
                     <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Status</mat-header-cell>
-                    <mat-cell *matCellDef="let agent" fxHide fxShow.gt-xs>
-                        <mat-icon *ngIf="agent.online" class="active-icon green-600 s-16">check</mat-icon>
-                        <mat-icon *ngIf="!agent.online" class="active-icon red-500 s-16">close</mat-icon>
+                    <mat-cell *matCellDef="let queue" fxHide fxShow.gt-xs>
+                        <mat-icon *ngIf="queue.online" class="active-icon green-600 s-16">check</mat-icon>
+                        <mat-icon *ngIf="!queue.online" class="active-icon red-500 s-16">close</mat-icon>
                     </mat-cell>
-                </ng-container>
+                </ng-container> -->
 
                 <!-- Action Column -->
                 <!-- Definition for the cell containing the button -->
                 <ng-container matColumnDef="action">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Action</mat-header-cell>
-                    <mat-cell *matCellDef="let agent" (click)="$event.stopPropagation()">
-                        <button mat-icon-button (click)="deleteAgent(agent.id)" matTooltip="Delete this agent">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs style="flex: 0 1 20%;">Action</mat-header-cell>
+                    <mat-cell *matCellDef="let queue" style="flex: 0 1 20%;" (click)="$event.stopPropagation()">
+                        <button mat-icon-button (click)="deleteQueue(queue.id)" matTooltip="Delete this queue">
                             <mat-icon>delete</mat-icon>
                         </button>
                         <!-- <button mat-icon-button (click)="removeAt(i)" matTooltip="Remove this score">
@@ -139,8 +136,8 @@
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
 
-                <tr mat-row *matRowDef="let agent; columns: displayedColumns;" class="agent" matRipple
-                    [routerLink]="'/pages/agents/'+agent.id+'/'+''">
+                <tr mat-row *matRowDef="let queue; columns: displayedColumns;" class="queue" matRipple
+                    [routerLink]="'/pages/queues/'+queue.id+'/'+''">
                 </tr>
 
             </mat-table>

@@ -60,6 +60,10 @@ manage-agents {
         overflow: auto;
         -webkit-overflow-scrolling: touch;
 
+        tr.mat-header-row, tr.mat-row {
+            display: flex;
+            border-bottom: inherit;
+            }
         .mat-header-row {
             min-height: 64px;
         }
@@ -123,5 +127,8 @@ manage-agents {
         .active-icon {
             border-radius: 50%;
         }
+    }
+    .fileExcel{
+        width: 55%;
     }
 }

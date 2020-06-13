@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Queue } from './queue.model';
+import { environment } from 'environments/environment.prod';
 
-@Injectable()
-export class EcommerceOrdersService implements Resolve<any>
+@Injectable({
+    providedIn: 'root'
+})
+export class ManageQueuesService implements Resolve<any>
 {
-    orders: any[];
-    onOrdersChanged: BehaviorSubject<any>;
+    queues: any[];
+    onQueuesChanged: BehaviorSubject<any>;
 
     /**
      * Constructor
@@ -19,7 +23,7 @@ export class EcommerceOrdersService implements Resolve<any>
     )
     {
         // Set the defaults
-        this.onOrdersChanged = new BehaviorSubject({});
+        this.onQueuesChanged = new BehaviorSubject({});
     }
 
     /**
@@ -29,12 +33,12 @@ export class EcommerceOrdersService implements Resolve<any>
      * @param {RouterStateSnapshot} state
      * @returns {Observable<any> | Promise<any> | any}
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any
+    resolve(): Observable<any> | Promise<any> | any
     {
         return new Promise((resolve, reject) => {
 
             Promise.all([
-                this.getOrders()
+                this.getQueues()
             ]).then(
                 () => {
                     resolve();
@@ -45,17 +49,27 @@ export class EcommerceOrdersService implements Resolve<any>
     }
 
     /**
-     * Get orders
+     * Get products
      *
      * @returns {Promise<any>}
      */
-    getOrders(): Promise<any>
+    getQueues(): Promise<any>
     {
         return new Promise((resolve, reject) => {
-            this._httpClient.get('api/e-commerce-orders')
+            this._httpClient.get<Queue[]>(`${environment.API_URL}/queue`)
                 .subscribe((response: any) => {
-                    this.orders = response;
-                    this.onOrdersChanged.next(this.orders);
+                    this.queues = response['result'];
+                    this.onQueuesChanged.next(this.queues);
+                    resolve(response);
+                }, reject);
+        });
+    }
+
+    deleteQueue(idqueue): Promise<any>
+    {
+        return new Promise((resolve, reject) => {
+            this._httpClient.delete<Queue[]>(`${environment.API_URL}/queue/` + idqueue)
+                .subscribe((response: any) => {
                     resolve(response);
                 }, reject);
         });

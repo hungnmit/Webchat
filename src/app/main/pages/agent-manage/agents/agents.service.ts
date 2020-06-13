@@ -5,7 +5,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Agent } from './agent.model';
 import { environment } from 'environments/environment.prod';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ManageAgentsService implements Resolve<any>
 {
     agents: any[];
@@ -31,7 +33,7 @@ export class ManageAgentsService implements Resolve<any>
      * @param {RouterStateSnapshot} state
      * @returns {Observable<any> | Promise<any> | any}
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any
+    resolve(): Observable<any> | Promise<any> | any
     {
         return new Promise((resolve, reject) => {
 
