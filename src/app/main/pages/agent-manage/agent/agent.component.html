@@ -1,0 +1,419 @@
+<div id="agent" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="row" fxLayoutAlign="space-between center">
+
+            <!-- APP TITLE -->
+            <div fxLayout="row" fxLayoutAlign="start center">
+
+                <button mat-icon-button class="mr-0 mr-sm-16" [routerLink]="'/pages/agents'">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+
+                <div class="agent-image mr-8 mr-sm-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    <!-- <img *ngIf="agent.online" [src]="assets/images/avatars/profile.jpg">
+                    <img *ngIf="!agent.online" [src]="'assets/images/avatars/profile.jpg'"> -->
+                    <img src="assets/images/avatars/profile.jpg">
+                </div>
+
+                <div fxLayout="column" fxLayoutAlign="start start"
+                    [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    <div class="h2" *ngIf="pageType ==='edit'">
+                        {{agent.id}}
+                    </div>
+                    <div class="h2" *ngIf="pageType ==='new'">
+                        New Agent
+                    </div>
+                    <div class="subtitle secondary-text">
+                        <span>Agent Detail</span>
+                    </div>
+                </div>
+            </div>
+            <!-- / APP TITLE -->
+
+            <button mat-raised-button class="save-product-button" [disabled]="productForm.invalid"
+                *ngIf="pageType ==='new'" (click)="addAgent()">
+                <span>ADD</span>
+            </button>
+
+            <button mat-raised-button class="save-product-button"
+                [disabled]="productForm.invalid || productForm.pristine" *ngIf="pageType ==='edit'"
+                (click)="saveAgent()">
+                <span>SAVE</span>
+            </button>
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card">
+
+            <!-- CONTENT -->
+            <div class="content">
+
+                <form name="productForm" [formGroup]="productForm" class="product w-100-p" fxLayout="column" fxFlex>
+
+                    <mat-tab-group>
+
+                        <mat-tab label="Basic Info">
+
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>ID</mat-label>
+                                    <input matInput placeholder="ID" name="id" formControlName="id" required>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Password</mat-label>
+                                    <input matInput placeholder="Password" name="password" formControlName="password"
+                                        required>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Date Received</mat-label>
+                                    <input matInput [matDatepicker]="dateReceived" name="dateReceived"
+                                        formControlName="dateReceived">
+                                    <mat-datepicker-toggle matSuffix [for]="dateReceived"></mat-datepicker-toggle>
+                                    <mat-datepicker [startAt]="dateReceived" #dateReceived></mat-datepicker>
+                                </mat-form-field>
+
+                                <!-- Checkbox Column -->
+                                <!-- <mat-checkbox formControlName="online">Online</mat-checkbox> -->
+
+                                <!-- <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Product Description</mat-label>
+                                    <textarea matInput placeholder="Product Description"
+                                              name="description"
+                                              formControlName="description"
+                                              rows="5">
+                                    </textarea>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+
+                                    <mat-label>Categories</mat-label>
+
+                                    <mat-chip-list #categoryList name="categories" formControlName="categories">
+
+                                        <mat-chip *ngFor="let category of agent.categories"
+                                                  [removable]="true" (removed)="agent.removeCategory(category)">
+                                            {{category}}
+                                            <mat-icon matChipRemove>cancel</mat-icon>
+                                        </mat-chip>
+
+                                        <input [matChipInputFor]="categoryList"
+                                               [matChipInputAddOnBlur]="true"
+                                               (matChipInputTokenEnd)="agent.addCategory($event)"/>
+
+                                    </mat-chip-list>
+
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+
+                                    <mat-label>Tags</mat-label>
+
+                                    <mat-chip-list #tagList name="tags" formControlName="tags">
+
+                                        <mat-chip *ngFor="let tag of agent.tags"
+                                                  [removable]="true" (removed)="agent.removeTag(tag)">
+                                            {{tag}}
+                                            <mat-icon matChipRemove>cancel</mat-icon>
+                                        </mat-chip>
+
+                                        <input [matChipInputFor]="tagList"
+                                               [matChipInputAddOnBlur]="true"
+                                               (matChipInputTokenEnd)="agent.addTag($event)"/>
+
+                                    </mat-chip-list>
+
+                                </mat-form-field> -->
+
+                            </div>
+
+                        </mat-tab>
+
+                        <mat-tab *ngIf="agent.id != ''" label="Agent In Queue">
+
+                            <!-- <div class="tab-content p-24" fusePerfectScrollbar>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Agent In Queue</mat-label>
+                                    <input matInput placeholder="Queues"
+                                           name="agentInQueue"
+                                           formControlName="agentInQueue">
+                                </mat-form-field>
+
+                            </div> -->
+
+                            <!-- <div class="tab-content p-24" fusePerfectScrollbar>
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Queue In Agent</mat-label>
+                                    <mat-select [(ngModel)]="selectedOptions" 
+                                    (openedChange)="comboChange($event)" 
+                                    [formControl]="queues" 
+                                    (change)="toggleInArray(queue);updateQueue()"
+                                    multiple>
+                                    <div fxLayout="row" fxLayoutAlign="start center">
+                                        <mat-option *ngFor="let queue of queueList" [value]="queue">
+                                                <img [alt]="queue" src="assets/images/avatars/profile.jpg" class="avatar"/>
+                                                {{queue}}
+                                        </mat-option>
+                                    </div>
+
+                                    </mat-select>
+                                </mat-form-field>               
+                            </div> -->
+
+                            <!-- <div class="tab-content p-24" fusePerfectScrollbar>
+                                <mat-card-content class="dashboard-card-content">
+                                    <contacts></contacts>
+                               </mat-card-content>
+                            </div> -->
+
+                            <div id="contacts" class="page-layout simple left-sidebar inner-sidebar inner-scroll">
+
+                                <!-- HEADER -->
+                                <div class="header accent p-16 p-sm-24" fxLayout="column" fxLayoutAlign="start"
+                                    fxLayout.gt-xs="row" fxLayoutAlign.gt-xs="space-between center">
+
+                                    <!-- APP TITLE -->
+                                    <div fxLayout="row" fxLayoutAlign="start center">
+
+                                        <div class="logo" fxLayout="row" fxLayoutAlign="start center">
+                                            <mat-icon class="logo-icon mr-16"
+                                                [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">queue
+                                            </mat-icon>
+                                            <span class="logo-text h1"
+                                                [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                                                Queues
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                    <!-- / APP TITLE -->
+
+                                    <!-- SEARCH -->
+                                    <div class="ml-sm-32" fxLayout="row" fxLayoutAlign="center center" fxFlex>
+
+                                        <div class="search-wrapper mt-16 mt-sm-0">
+
+                                            <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                                                <mat-icon>search</mat-icon>
+                                                <input [formControl]="searchInput" placeholder="Search for a queue">
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                    <!-- / SEARCH -->
+
+                                </div>
+                                <!-- / HEADER -->
+
+                                <!-- SELECTED BAR -->
+                                <selected-bar class="accent-600" *ngIf="hasSelectedContacts" [@slideInTop]>
+                                </selected-bar>
+                                <!-- / SELECTED BAR -->
+
+                                <!-- CONTENT -->
+                                <div class="content">
+
+                                    <!-- SIDEBAR -->
+                                    <fuse-sidebar class="sidebar" name="contacts-main-sidebar" position="left"
+                                        lockedOpen="gt-sm">
+
+                                        <!-- SIDEBAR CONTENT -->
+                                        <div class="content" fusePerfectScrollbar>
+                                            <contacts-main-sidebar [@animate]="{value:'*'}"></contacts-main-sidebar>
+                                        </div>
+                                        <!-- / SIDEBAR CONTENT -->
+
+                                    </fuse-sidebar>
+                                    <!-- / SIDEBAR -->
+
+                                    <!-- CENTER -->
+                                    <div class="center p-24 pb-56 pr-sm-92" fusePerfectScrollbar>
+
+                                        <!-- CONTENT -->
+                                        <div class="content">
+                                            <contacts-contact-list [agentid]="agent.id"
+                                                [agentinqueue]="agent.agentInQueue"></contacts-contact-list>
+                                        </div>
+                                        <!-- / CONTENT -->
+
+                                    </div>
+                                    <!-- / CENTER -->
+
+                                </div>
+                                <!-- / CONTENT-->
+
+                            </div>
+
+
+                        </mat-tab>
+
+                        <!-- <mat-tab label="Product Images">
+
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+                                <div fxLayout="row wrap" fxLayoutAlign="start start">
+
+                                    <div *ngIf="agent.images.length === 0"
+                                         class="agent-image" fxlayout="row" fxLayoutAlign="center center">
+                                        <img class="media"
+                                             [src]="'assets/images/ecommerce/product-image-placeholder.png'">
+                                    </div>
+
+                                    <div *ngFor="let image of agent.images">
+                                        <div *ngIf="agent.images.length > 0"
+                                             class="agent-image" fxlayout="row" fxLayoutAlign="center center">
+                                            <img class="media" [src]="image.url">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </mat-tab> -->
+
+                        <!-- <mat-tab label="Pricing">
+
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Tax Excluded Price</mat-label>
+                                    <input matInput placeholder="Tax Excluded Price"
+                                           name="priceTaxExcl"
+                                           formControlName="priceTaxExcl"
+                                           type="number">
+                                    <span matPrefix>$&nbsp;</span>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Tax Included Price</mat-label>
+                                    <input matInput placeholder="Tax Included Price"
+                                           name="priceTaxIncl"
+                                           formControlName="priceTaxIncl"
+                                           type="number">
+                                    <span matPrefix>$&nbsp;</span>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Tax Rate</mat-label>
+                                    <input matInput placeholder="Tax Rate"
+                                           name="taxRate"
+                                           formControlName="taxRate"
+                                           type="number">
+                                    <span matPrefix>&#37;&nbsp;</span>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Compared Price</mat-label>
+                                    <input matInput placeholder="Compared Price"
+                                           name="comparedPrice"
+                                           formControlName="comparedPrice"
+                                           type="number">
+                                    <span matPrefix>$&nbsp;</span>
+                                    <mat-hint align="start">Add a compare price to show next to the real price
+                                    </mat-hint>
+                                </mat-form-field>
+
+                            </div>
+                        </mat-tab> -->
+
+                        <!-- <mat-tab label="Inventory">
+
+                            <div class="tab-content p-24" fusePerfectScrollbar>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>SKU</mat-label>
+                                    <input matInput placeholder="SKU"
+                                           name="sku"
+                                           formControlName="sku">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Quantity</mat-label>
+                                    <input matInput placeholder="Quantity"
+                                           name="quantity"
+                                           formControlName="quantity"
+                                           type="number">
+                                </mat-form-field>
+
+                            </div>
+
+                        </mat-tab>
+
+                        <mat-tab label="Shipping">
+
+                            <div class="tab-content p-24" fusePerfectScrollbar fxLayout="column">
+
+                                <div fxLayout="row" fxLayoutAlign="space-between">
+
+                                    <mat-form-field appearance="outline" floatLabel="always" fxFlex="30">
+                                        <mat-label>Width</mat-label>
+                                        <input matInput placeholder="Width"
+                                               name="Width"
+                                               formControlName="width">
+                                        <span matSuffix>cm</span>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" floatLabel="always" fxFlex="30">
+                                        <mat-label>Height</mat-label>
+                                        <input matInput placeholder="Height"
+                                               name="Height"
+                                               formControlName="height">
+                                        <span matSuffix>cm</span>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline" floatLabel="always" fxFlex="30">
+                                        <mat-label>Depth</mat-label>
+                                        <input matInput placeholder="Depth"
+                                               name="Depth"
+                                               formControlName="depth">
+                                        <span matSuffix>cm</span>
+                                    </mat-form-field>
+
+                                </div>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Weight</mat-label>
+                                    <input matInput placeholder="Weight"
+                                           name="Weight"
+                                           formControlName="weight">
+                                    <span matSuffix>kg</span>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                    <mat-label>Extra Shipping Fee</mat-label>
+                                    <input matInput placeholder="Extra Shipping Fee"
+                                           name="extraShippingFee"
+                                           formControlName="extraShippingFee"
+                                           type="number">
+                                    <span matPrefix>$&nbsp;</span>
+                                </mat-form-field>
+
+                            </div>
+
+                        </mat-tab> -->
+
+                    </mat-tab-group>
+
+                </form>
+
+            </div>
+            <!-- / CONTENT -->
+
+        </div>
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+
+</div>

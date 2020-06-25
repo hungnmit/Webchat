@@ -1,0 +1,43 @@
+<div class="sidebar-content">
+    <div class="card">
+        <!-- SIDEBAR HEADER -->
+        <div class="header p-20" fxLayout="row" fxLayoutAlign="start center">
+            <!-- TABLE NAME -->
+            <h4 class="h3"><strong>MANAGE AGENT</strong></h4>
+            <!-- / TABLE NAME -->
+        </div>
+        <!-- / SIDEBAR HEADER -->
+
+        <!-- SIDEBAR CONTENT -->
+        <div class="card-body">
+            <!-- <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)"
+                (editConfirm)="onSaveConfirm($event)" (createConfirm)="onCreateConfirm($event)">
+            </ng2-smart-table> -->
+            <ng2-smart-table [settings]="settings" [source]="source" (deleteConfirm)="onDeleteConfirm($event)"
+            (custom)="onCustomAction($event)">
+            </ng2-smart-table>
+        </div>
+        <div class="footer-nav" style="margin-bottom: 2%;">
+            <form>      
+              <div>
+                <input type="file" name="excel" accept=".xlsx" (change)="selectImage($event)" />
+                <button mat-button type="submit" (click)="Import()">Import</button>
+              </div>
+            </form>
+        </div>
+        <div>
+            <button mat-raised-button color="primary" (click)="ExportTOExcel()">Export as Excel</button>
+        </div>
+    </div>
+</div>
+<!-- / SIDEBAR CONTENT -->
+
+<!-- ADD AGENT BUTTON -->
+<button class="accent ng-tns-c211-31 mat-fab mat-button-base mat-accent ng-trigger ng-trigger-animate"
+    id="add-contact-button" (click)="newAgent()" aria-label="add contact"
+    [@animate]="{value:'*', params:{delay:'300ms',scale:'.2'}}">
+    <span class="mat-button-wrapper">
+        <mat-icon>person_add</mat-icon>
+    </span>
+</button>
+<!-- / ADD AGENT BUTTON -->

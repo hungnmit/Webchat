@@ -1,0 +1,180 @@
+<div id="queues" class="page-layout carded fullwidth inner-scroll">
+
+    <!-- TOP BACKGROUND -->
+    <div class="top-bg accent"></div>
+    <!-- / TOP BACKGROUND -->
+
+    <!-- CENTER -->
+    <div class="center">
+
+        <!-- HEADER -->
+        <div class="header accent" fxLayout="column" fxLayoutAlign="center center" fxLayout.gt-sm="row"
+            fxLayoutAlign.gt-sm="space-between center">
+
+            <!-- APP TITLE -->
+            <div class="logo mb-24 mb-md-0" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon class="logo-icon s-32 mr-16" [@animate]="{value:'*',params:{delay:'50ms',scale:'0.2'}}">
+                    queue
+                </mat-icon>
+                <span class="logo-text h1" [@animate]="{value:'*',params:{delay:'100ms',x:'-25px'}}">
+                    Manage Queue
+                </span>
+            </div>
+            <!-- / APP TITLE -->
+
+            <!-- SEARCH -->
+            <div class="search-wrapper mx-32 mx-md-0">
+                <div class="search" fxFlex fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon>search</mat-icon>
+                    <input #filter placeholder="Search for a queue">
+                </div>
+            </div>
+            <!-- / SEARCH -->
+
+            <button mat-button mat-raised-button color="primary" (click)="ExportFile()">
+                <mat-icon>cloud_download</mat-icon>
+                <span> EXPORT FILE</span>
+            </button>
+
+            <!-- ADD BUTTON -->
+            <button mat-raised-button [routerLink]="'/pages/queues/new'"
+                class="add-product-button fuse-white mt-24 mt-md-0">
+                <span>ADD NEW QUEUE</span>
+            </button>
+            <!-- / ADD BUTTON -->
+
+        </div>
+        <!-- / HEADER -->
+
+        <!-- CONTENT CARD -->
+        <div class="content-card" #TABLE>
+
+            <mat-table class="queues-table" #table [dataSource]="dataSource" matSort [@animateStagger]="{value:'50'}"
+                fusePerfectScrollbar>
+
+                <!-- ID Column -->
+                <ng-container matColumnDef="id">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header style="flex: 0 1 10%;">ID</mat-header-cell>
+                    <mat-cell *matCellDef="let queue" style="flex: 0 1 10%;">
+                        <p class="text-truncate">{{queue.id}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Image Column -->
+                <ng-container matColumnDef="image">
+                    <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                    <mat-cell *matCellDef="let product">
+                        <img class="queue-image" *ngIf="product.featuredImageId" [alt]="product.name"
+                            [src]="product.images[product.featuredImageId].url" />
+                        <img class="avatar ng-tns-c252-88 ng-star-inserted" [src]="'assets/images/ecommerce/product-image-placeholder.png'">
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header>Name</mat-header-cell>
+                    <mat-cell *matCellDef="let queue">
+                        <p class="text-truncate">{{queue.name}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Category Column -->
+                <ng-container matColumnDef="category">
+                    <mat-header-cell *matHeaderCellDef fxHide mat-sort-header style="flex: 0 1 30%;" fxShow.gt-md>Date Received
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let queue" fxHide style="flex: 0 1 30%;" fxShow.gt-md>
+                        <p class="category text-truncate">
+                            {{queue.dateReceived | date:'MM/dd/yyyy'}}
+                        </p>
+                    </mat-cell>
+                </ng-container>
+
+                <!-- Price Column -->
+                <!-- <ng-container matColumnDef="price">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Price</mat-header-cell>
+                    <mat-cell *matCellDef="let product" fxHide fxShow.gt-xs>
+                        <p class="price text-truncate">
+                            {{product.priceTaxIncl | currency:'USD':'symbol'}}
+                        </p>
+                    </mat-cell>
+                </ng-container> -->
+
+                <!-- Quantity Column -->
+                <!-- <ng-container matColumnDef="quantity">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-sm>Talking</mat-header-cell>
+                    <mat-cell *matCellDef="let queue" fxHide fxShow.gt-sm>
+
+                        <span>
+                            {{queue.talking}}
+                        </span>
+
+                    </mat-cell>
+                </ng-container> -->
+
+                <!-- Active Column -->
+                <!-- <ng-container matColumnDef="active">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Status</mat-header-cell>
+                    <mat-cell *matCellDef="let queue" fxHide fxShow.gt-xs>
+                        <mat-icon *ngIf="queue.online" class="active-icon green-600 s-16">check</mat-icon>
+                        <mat-icon *ngIf="!queue.online" class="active-icon red-500 s-16">close</mat-icon>
+                    </mat-cell>
+                </ng-container> -->
+
+                <!-- Action Column -->
+                <!-- Definition for the cell containing the button -->
+                <ng-container matColumnDef="action">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs style="flex: 0 1 20%;">Action</mat-header-cell>
+                    <mat-cell *matCellDef="let queue" style="flex: 0 1 20%;" (click)="$event.stopPropagation()">
+                        <button mat-icon-button (click)="deleteQueue(queue.id)" matTooltip="Delete this queue">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                        <!-- <button mat-icon-button (click)="removeAt(i)" matTooltip="Remove this score">
+                            <mat-icon>clear</mat-icon>
+                        </button> -->
+                    </mat-cell>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky:true"></tr>
+
+                <tr mat-row *matRowDef="let queue; columns: displayedColumns;" class="queue" matRipple
+                    [routerLink]="'/pages/queues/'+queue.id+'/'+''">
+                </tr>
+
+            </mat-table>
+
+            <!-- <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+            </mat-paginator> -->
+
+            <mat-toolbar-row>
+                <div>
+                    <form>
+                        <div style="margin-top: 5%;">
+                            <!-- <mat-form-field>
+                                <ngx-mat-file-input placeholder="EXCEL file only" [accept]="'.xlsx'" (change)="selectFile($event)">
+                                </ngx-mat-file-input>
+                                <mat-icon matSuffix>folder</mat-icon>
+                            </mat-form-field> -->
+                            <input type="file" class="fileExcel" [(ngModel)]='fileExcel' name="excel" accept=".xlsx" (change)="selectFile($event)" />
+    
+                            <button mat-button mat-raised-button [disabled]="!fileExcel" color="accent" style="margin-left: 5%;" type="submit" (click)="Import()">
+                                <mat-icon>cloud_upload</mat-icon>
+                                <span> Import</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div style="width: 18%;"></div>
+                <div>
+                    <mat-paginator #paginator [length]="dataSource.filteredData.length" [pageIndex]="0" [pageSize]="10"
+                        [pageSizeOptions]="[5, 10, 25, 100]">
+                    </mat-paginator>
+                </div>
+            </mat-toolbar-row>
+        </div>
+
+        <!-- / CONTENT CARD -->
+
+    </div>
+    <!-- / CENTER -->
+</div>
