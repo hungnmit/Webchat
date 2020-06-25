@@ -4,10 +4,10 @@ export const environment = {
 
     password: "khoa123",
 
-    API_URL: `http://localhost:8080/api`,
+    API_URL: `https://api-server1920.herokuapp.com/api`,
     AGENT_SEND_USER: `AGENT_SEND_USER`,
     USER_SEND_AGENT: `USER_SEND_AGENT`,
     TRANSFER_TOKEN: `TRANSFER_TOKEN`,
     COMPLETE_CONVERSATION: `COMPLETE_CONVERSATION`,
-    SOCKET_URL: `http://localhost:3978`,
+    SOCKET_URL: `https://chatbot1920.herokuapp.com/`,
 };
