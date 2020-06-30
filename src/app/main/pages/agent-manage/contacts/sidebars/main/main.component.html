@@ -27,13 +27,13 @@
 
                 <div class="nav-item" aria-label="starred" (click)="changeFilter('starred')">
                     <a class="nav-link" matRipple [ngClass]="{'active accent':filterBy ==='starred'}">
-                        <div class="title">Queue in Agent</div>
+                        <div class="title">Assigned Queues</div>
                     </a>
                 </div>
                 
                 <div class="nav-item" aria-label="frequently contacted" (click)="changeFilter('frequent')">
                     <a class="nav-link" matRipple [ngClass]="{'active accent':filterBy ==='frequent'}">
-                        <div class="title">Queue not in Agent</div>
+                        <div class="title">Unassigned Queues</div>
                     </a>
                 </div>
 
