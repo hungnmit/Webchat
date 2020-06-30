@@ -61,12 +61,12 @@
 
     <!-- Buttons Column -->
     <ng-container matColumnDef="buttons">
-        <mat-header-cell *matHeaderCellDef>Action</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>Assign</mat-header-cell>
         <mat-cell *matCellDef="let info">
             <div fxFlex="row" fxLayoutAlign="end center">
                 <button mat-icon-button (click)="$event.stopPropagation();toggleStar(info.id)" aria-label="Toggle star">
-                    <mat-icon class="amber-fg" *ngIf="AgentInQueue.includes(info.id)">star</mat-icon>
-                    <mat-icon class="secondary-text" *ngIf="!AgentInQueue.includes(info.id)">star_border</mat-icon>
+                    <mat-icon class="amber-fg" *ngIf="AgentInQueue.includes(info.id)">assignment</mat-icon>
+                    <mat-icon class="secondary-text" *ngIf="!AgentInQueue.includes(info.id)">assignment</mat-icon>
                 </button>
 
                 <!-- <button mat-icon-button [matMenuTriggerFor]="moreMenu" aria-label="More"

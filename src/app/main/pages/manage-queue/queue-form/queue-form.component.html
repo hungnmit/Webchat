@@ -43,7 +43,7 @@
 
             <div fxLayout="row" fxLayoutAlign="start start">
                 <mat-form-field appearance="outline" fxFlex style="width: 100%;">
-                    <mat-label>Agent In Queue</mat-label>
+                    <mat-label>Queues</mat-label>
                     <mat-select [(ngModel)]="selectedOptions" (openedChange)="comboChange($event)" [formControl]="agents" multiple>
                         <mat-option *ngFor="let agent of agentList" [value]="agent">{{agent}}</mat-option>
                     </mat-select>

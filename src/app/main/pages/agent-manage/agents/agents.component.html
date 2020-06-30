@@ -61,6 +61,8 @@
                 </ng-container>
 
                 <!-- Image Column -->
+
+                <!--
                 <ng-container matColumnDef="image">
                     <mat-header-cell *matHeaderCellDef></mat-header-cell>
                     <mat-cell *matCellDef="let product">
@@ -69,7 +71,8 @@
                         <img class="avatar ng-tns-c252-88 ng-star-inserted" [src]="'assets/images/avatars/profile.jpg'">
                     </mat-cell>
                 </ng-container>
-
+                -->
+                
                 <!-- Name Column -->
                 <ng-container matColumnDef="name">
                     <mat-header-cell *matHeaderCellDef mat-sort-header>Password</mat-header-cell>
@@ -125,8 +128,8 @@
 
                 <!-- Action Column -->
                 <!-- Definition for the cell containing the button -->
-                <ng-container matColumnDef="action">
-                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Action</mat-header-cell>
+                <ng-container matColumnDef="remove">
+                    <mat-header-cell *matHeaderCellDef mat-sort-header fxHide fxShow.gt-xs>Remove</mat-header-cell>
                     <mat-cell *matCellDef="let agent" (click)="$event.stopPropagation()">
                         <button mat-icon-button (click)="deleteAgent(agent.id)" matTooltip="Delete this agent">
                             <mat-icon>delete</mat-icon>

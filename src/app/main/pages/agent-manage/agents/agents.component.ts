@@ -21,29 +21,28 @@ import * as XLSX from 'xlsx';
 import { PeriodicElement } from 'assets/angular-material-examples/table-basic/table-basic-example';
 
 @Component({
-    selector     : 'manage-agents',
-    templateUrl  : './agents.component.html',
-    styleUrls    : ['./agents.component.scss'],
-    animations   : fuseAnimations,
+    selector: 'manage-agents',
+    templateUrl: './agents.component.html',
+    styleUrls: ['./agents.component.scss'],
+    animations: fuseAnimations,
     encapsulation: ViewEncapsulation.None
 })
-export class ManageAgentsComponent implements OnInit
-{
+export class ManageAgentsComponent implements OnInit {
     dataSource: FilesDataSource | null;
-    displayedColumns = ['id', 'image', 'name', 'category', 'quantity', 'active', 'action'];
+    displayedColumns = ['id', /*'image',*/ 'name', 'category', 'quantity', 'active', 'remove'];
 
-    @ViewChild(MatPaginator, {static: true})
+    @ViewChild(MatPaginator, { static: true })
     paginator: MatPaginator;
 
-    @ViewChild(MatSort, {static: true})
+    @ViewChild(MatSort, { static: true })
     sort: MatSort;
 
-    @ViewChild('filter', {static: true})
+    @ViewChild('filter', { static: true })
     filter: ElementRef;
 
     confirmDialogRef: MatDialogRef<FuseConfirmDialogComponent>;
 
-    @ViewChild('TABLE', {static: true}) table: ElementRef;
+    @ViewChild('TABLE', { static: true }) table: ElementRef;
     // Private
     private _unsubscribeAll: Subject<any>;
 
@@ -53,8 +52,7 @@ export class ManageAgentsComponent implements OnInit
         private _matSnackBar: MatSnackBar,
         private _httpClient: HttpClient,
         private changeDetectorRefs: ChangeDetectorRef
-    )
-    {
+    ) {
         // Set the private defaults
         this._unsubscribeAll = new Subject();
     }
@@ -66,46 +64,42 @@ export class ManageAgentsComponent implements OnInit
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         this.loadAgents();
     }
-    loadAgents(){
+    loadAgents() {
 
         fromEvent(this.filter.nativeElement, 'keyup')
-        .pipe(
-            takeUntil(this._unsubscribeAll),
-            debounceTime(150),
-            distinctUntilChanged()
-        )
-        .subscribe(() => {
-            if ( !this.dataSource )
-            {
-                return;
-            }
+            .pipe(
+                takeUntil(this._unsubscribeAll),
+                debounceTime(150),
+                distinctUntilChanged()
+            )
+            .subscribe(() => {
+                if (!this.dataSource) {
+                    return;
+                }
 
-            this.dataSource.filter = this.filter.nativeElement.value;
-        });
+                this.dataSource.filter = this.filter.nativeElement.value;
+            });
         this._manageAgentsServiceService.resolve();
-        this.dataSource = new FilesDataSource(this._manageAgentsServiceService, this.paginator, this.sort);   
+        this.dataSource = new FilesDataSource(this._manageAgentsServiceService, this.paginator, this.sort);
     }
     /**
      * Delete Agent
      */
-    deleteAgent(idAagent : number): void
-    {
+    deleteAgent(idAagent: number): void {
         this.confirmDialogRef = this._matDialog.open(FuseConfirmDialogComponent, {
             disableClose: false
         });
 
         this.confirmDialogRef.componentInstance.confirmMessage = 'Are you sure you want to delete?';
 
-        this.confirmDialogRef.afterClosed().subscribe(result => {
-            if ( result )
-            {
-                this._manageAgentsServiceService.deleteAgent(idAagent);
+        this.confirmDialogRef.afterClosed().subscribe(async result => {
+            if (result) {
+                await this._manageAgentsServiceService.deleteAgent(idAagent);
                 // Show the success message
-                this._manageAgentsServiceService.resolve();
+                // this._manageAgentsServiceService.resolve();
                 this.loadAgents();
                 this._matSnackBar.open('Agent deleted', 'OK', {
                     verticalPosition: 'top',
@@ -146,7 +140,7 @@ export class ManageAgentsComponent implements OnInit
                 }
                 reader.readAsBinaryString(file);
             }
-            else{
+            else {
                 alert("Please import file .xlsx");
             }
         }
@@ -178,19 +172,18 @@ export class ManageAgentsComponent implements OnInit
         });
     }
 
-    fileName= 'AgentsSheet.xlsx';
-    ExportFile() 
-    {
-       /* table id is passed over here */   
-       //let element = document.getElementById('excel-table'); 
-       //const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(this.table.nativeElement);
-       const ws = XLSX.utils.json_to_sheet(this.dataSource.filteredData);
-       /* generate workbook and add the worksheet */
-       const wb: XLSX.WorkBook = XLSX.utils.book_new();
-       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    fileName = 'AgentsSheet.xlsx';
+    ExportFile() {
+        /* table id is passed over here */
+        //let element = document.getElementById('excel-table'); 
+        //const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(this.table.nativeElement);
+        const ws = XLSX.utils.json_to_sheet(this.dataSource.filteredData);
+        /* generate workbook and add the worksheet */
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
-       /* save to file */
-       XLSX.writeFile(wb, this.fileName);	
+        /* save to file */
+        XLSX.writeFile(wb, this.fileName);
     }
 }
 
@@ -210,8 +203,7 @@ export class FilesDataSource extends DataSource<any>
         private _manageAgentsServiceService: ManageAgentsService,
         private _matPaginator: MatPaginator,
         private _matSort: MatSort
-    )
-    {
+    ) {
         super();
 
         this.filteredData = this._manageAgentsServiceService.agents;
@@ -222,8 +214,7 @@ export class FilesDataSource extends DataSource<any>
      *
      * @returns {Observable<any[]>}
      */
-    connect(): Observable<any[]>
-    {
+    connect(): Observable<any[]> {
         const displayDataChanges = [
             this._manageAgentsServiceService.onAgentsChanged,
             this._matPaginator.page,
@@ -234,18 +225,18 @@ export class FilesDataSource extends DataSource<any>
         return merge(...displayDataChanges)
             .pipe(
                 map(() => {
-                        let data = this._manageAgentsServiceService.agents.slice();
+                    let data = this._manageAgentsServiceService.agents.slice();
 
-                        data = this.filterData(data);
+                    data = this.filterData(data);
 
-                        this.filteredData = [...data];
+                    this.filteredData = [...data];
 
-                        data = this.sortData(data);
+                    data = this.sortData(data);
 
-                        // Grab the page's slice of data.
-                        const startIndex = this._matPaginator.pageIndex * this._matPaginator.pageSize;
-                        return data.splice(startIndex, this._matPaginator.pageSize);
-                    }
+                    // Grab the page's slice of data.
+                    const startIndex = this._matPaginator.pageIndex * this._matPaginator.pageSize;
+                    return data.splice(startIndex, this._matPaginator.pageSize);
+                }
                 ));
     }
 
@@ -254,24 +245,20 @@ export class FilesDataSource extends DataSource<any>
     // -----------------------------------------------------------------------------------------------------
 
     // Filtered data
-    get filteredData(): any
-    {
+    get filteredData(): any {
         return this._filteredDataChange.value;
     }
 
-    set filteredData(value: any)
-    {
+    set filteredData(value: any) {
         this._filteredDataChange.next(value);
     }
 
     // Filter
-    get filter(): string
-    {
+    get filter(): string {
         return this._filterChange.value;
     }
 
-    set filter(filter: string)
-    {
+    set filter(filter: string) {
         this._filterChange.next(filter);
     }
 
@@ -285,10 +272,8 @@ export class FilesDataSource extends DataSource<any>
      * @param data
      * @returns {any}
      */
-    filterData(data): any
-    {
-        if ( !this.filter )
-        {
+    filterData(data): any {
+        if (!this.filter) {
             return data;
         }
         return FuseUtils.filterArrayByString(data, this.filter);
@@ -300,10 +285,8 @@ export class FilesDataSource extends DataSource<any>
      * @param data
      * @returns {any[]}
      */
-    sortData(data): any[]
-    {
-        if ( !this._matSort.active || this._matSort.direction === '' )
-        {
+    sortData(data): any[] {
+        if (!this._matSort.active || this._matSort.direction === '') {
             return data;
         }
 
@@ -311,8 +294,7 @@ export class FilesDataSource extends DataSource<any>
             let propertyA: number | string = '';
             let propertyB: number | string = '';
 
-            switch ( this._matSort.active )
-            {
+            switch (this._matSort.active) {
                 case 'id':
                     [propertyA, propertyB] = [a.id, b.id];
                     break;
@@ -343,7 +325,6 @@ export class FilesDataSource extends DataSource<any>
     /**
      * Disconnect
      */
-    disconnect(): void
-    {
+    disconnect(): void {
     }
 }
