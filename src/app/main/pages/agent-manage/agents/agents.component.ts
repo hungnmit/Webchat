@@ -28,6 +28,18 @@ import { PeriodicElement } from 'assets/angular-material-examples/table-basic/ta
     encapsulation: ViewEncapsulation.None
 })
 export class ManageAgentsComponent implements OnInit {
+
+    constructor(
+        private _manageAgentsServiceService: ManageAgentsService,
+        public _matDialog: MatDialog,
+        private _matSnackBar: MatSnackBar,
+        private _httpClient: HttpClient,
+        private changeDetectorRefs: ChangeDetectorRef
+    ) {
+        // Set the private defaults
+        this._unsubscribeAll = new Subject();
+    }
+
     dataSource: FilesDataSource | null;
     displayedColumns = ['id', /*'image',*/ 'name', 'category', 'quantity', 'active', 'remove'];
 
@@ -46,16 +58,9 @@ export class ManageAgentsComponent implements OnInit {
     // Private
     private _unsubscribeAll: Subject<any>;
 
-    constructor(
-        private _manageAgentsServiceService: ManageAgentsService,
-        public _matDialog: MatDialog,
-        private _matSnackBar: MatSnackBar,
-        private _httpClient: HttpClient,
-        private changeDetectorRefs: ChangeDetectorRef
-    ) {
-        // Set the private defaults
-        this._unsubscribeAll = new Subject();
-    }
+    dataString = null;
+
+    fileName = 'AgentsSheet.xlsx';
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -67,6 +72,7 @@ export class ManageAgentsComponent implements OnInit {
     ngOnInit(): void {
         this.loadAgents();
     }
+    // tslint:disable-next-line: typedef
     loadAgents() {
 
         fromEvent(this.filter.nativeElement, 'keyup')
@@ -111,41 +117,40 @@ export class ManageAgentsComponent implements OnInit {
         });
     }
 
-    dataString = null;
-
+    // tslint:disable-next-line: typedef
     selectFile(event) {
         if (event.target.files.length > 0) {
-            //const file = event.target.files[0];
-            //this.filesToUpload = file;
+            // const file = event.target.files[0];
+            // this.filesToUpload = file;
             let workBook = null;
             let jsonData = null;
             const reader = new FileReader();
             const file = event.target.files[0];
-            let checkTypeFile = file.name.includes(".xlsx");
+            const checkTypeFile = file.name.includes('.xlsx');
             if (checkTypeFile) {
+                // tslint:disable-next-line: no-shadowed-variable
                 reader.onload = (event) => {
                     this.dataString = null;
                     const data = reader.result;
                     workBook = XLSX.read(data, { type: 'binary' });
                     jsonData = workBook.SheetNames.reduce((initial, name) => {
-                        var firstSheet = workBook.SheetNames[0];
-                        //Read all rows from First Sheet into an JSON array.
-                        var excelRows = XLSX.utils.sheet_to_json(workBook.Sheets[firstSheet]);
+                        const firstSheet = workBook.SheetNames[0];
+                        // Read all rows from First Sheet into an JSON array.
+                        const excelRows = XLSX.utils.sheet_to_json(workBook.Sheets[firstSheet]);
                         // const sheet = workBook.Sheets[name];
                         // initial[name] = XLSX.utils.sheet_to_json(sheet);
                         return excelRows;
                     }, {});
-                    //this.dataString = JSON.stringify(jsonData);
+                    // this.dataString = JSON.stringify(jsonData);
                     this.dataString = jsonData;
-                }
+                };
                 reader.readAsBinaryString(file);
             }
-            else {
-                alert("Please import file .xlsx");
+            else{
+                alert('Please import file .xlsx');
             }
         }
-    };
-
+    }
     Import(): Promise<any> {
         return new Promise((resolve, reject) => {
             this._httpClient.post<Agent[]>(`${environment.API_URL}/importFileAgent`, this.dataString)
@@ -171,19 +176,19 @@ export class ManageAgentsComponent implements OnInit {
                 }, reject);
         });
     }
+    // tslint:disable-next-line: typedef
+    ExportFile() 
+    {
+       /* table id is passed over here */   
+       // let element = document.getElementById('excel-table'); 
+       // const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(this.table.nativeElement);
+       const ws = XLSX.utils.json_to_sheet(this.dataSource.filteredData);
+       /* generate workbook and add the worksheet */
+       const wb: XLSX.WorkBook = XLSX.utils.book_new();
+       XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
-    fileName = 'AgentsSheet.xlsx';
-    ExportFile() {
-        /* table id is passed over here */
-        //let element = document.getElementById('excel-table'); 
-        //const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(this.table.nativeElement);
-        const ws = XLSX.utils.json_to_sheet(this.dataSource.filteredData);
-        /* generate workbook and add the worksheet */
-        const wb: XLSX.WorkBook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-        /* save to file */
-        XLSX.writeFile(wb, this.fileName);
+       /* save to file */
+       XLSX.writeFile(wb, this.fileName);	
     }
 }
 
@@ -203,7 +208,8 @@ export class FilesDataSource extends DataSource<any>
         private _manageAgentsServiceService: ManageAgentsService,
         private _matPaginator: MatPaginator,
         private _matSort: MatSort
-    ) {
+    )
+    {
         super();
 
         this.filteredData = this._manageAgentsServiceService.agents;
@@ -214,7 +220,8 @@ export class FilesDataSource extends DataSource<any>
      *
      * @returns {Observable<any[]>}
      */
-    connect(): Observable<any[]> {
+    connect(): Observable<any[]>
+    {
         const displayDataChanges = [
             this._manageAgentsServiceService.onAgentsChanged,
             this._matPaginator.page,
@@ -225,18 +232,18 @@ export class FilesDataSource extends DataSource<any>
         return merge(...displayDataChanges)
             .pipe(
                 map(() => {
-                    let data = this._manageAgentsServiceService.agents.slice();
+                        let data = this._manageAgentsServiceService.agents.slice();
 
-                    data = this.filterData(data);
+                        data = this.filterData(data);
 
-                    this.filteredData = [...data];
+                        this.filteredData = [...data];
 
-                    data = this.sortData(data);
+                        data = this.sortData(data);
 
-                    // Grab the page's slice of data.
-                    const startIndex = this._matPaginator.pageIndex * this._matPaginator.pageSize;
-                    return data.splice(startIndex, this._matPaginator.pageSize);
-                }
+                        // Grab the page's slice of data.
+                        const startIndex = this._matPaginator.pageIndex * this._matPaginator.pageSize;
+                        return data.splice(startIndex, this._matPaginator.pageSize);
+                    }
                 ));
     }
 
@@ -245,20 +252,24 @@ export class FilesDataSource extends DataSource<any>
     // -----------------------------------------------------------------------------------------------------
 
     // Filtered data
-    get filteredData(): any {
+    get filteredData(): any
+    {
         return this._filteredDataChange.value;
     }
 
-    set filteredData(value: any) {
+    set filteredData(value: any)
+    {
         this._filteredDataChange.next(value);
     }
 
     // Filter
-    get filter(): string {
+    get filter(): string
+    {
         return this._filterChange.value;
     }
 
-    set filter(filter: string) {
+    set filter(filter: string)
+    {
         this._filterChange.next(filter);
     }
 
@@ -272,8 +283,10 @@ export class FilesDataSource extends DataSource<any>
      * @param data
      * @returns {any}
      */
-    filterData(data): any {
-        if (!this.filter) {
+    filterData(data): any
+    {
+        if ( !this.filter )
+        {
             return data;
         }
         return FuseUtils.filterArrayByString(data, this.filter);
@@ -285,8 +298,10 @@ export class FilesDataSource extends DataSource<any>
      * @param data
      * @returns {any[]}
      */
-    sortData(data): any[] {
-        if (!this._matSort.active || this._matSort.direction === '') {
+    sortData(data): any[]
+    {
+        if ( !this._matSort.active || this._matSort.direction === '' )
+        {
             return data;
         }
 
@@ -294,7 +309,8 @@ export class FilesDataSource extends DataSource<any>
             let propertyA: number | string = '';
             let propertyB: number | string = '';
 
-            switch (this._matSort.active) {
+            switch ( this._matSort.active )
+            {
                 case 'id':
                     [propertyA, propertyB] = [a.id, b.id];
                     break;
@@ -325,6 +341,7 @@ export class FilesDataSource extends DataSource<any>
     /**
      * Disconnect
      */
-    disconnect(): void {
+    disconnect(): void
+    {
     }
 }

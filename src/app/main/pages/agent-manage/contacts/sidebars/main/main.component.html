@@ -21,19 +21,19 @@
                 <div class="nav-item" aria-label="inbox">
                     <a class="nav-link" matRipple (click)="changeFilter('all')"
                        [ngClass]="{'active accent':filterBy ==='all'}">
-                        <span class="title">All queues</span>
+                        <span class="title">All Queues</span>
                     </a>
                 </div>
 
                 <div class="nav-item" aria-label="starred" (click)="changeFilter('starred')">
                     <a class="nav-link" matRipple [ngClass]="{'active accent':filterBy ==='starred'}">
-                        <div class="title">Assigned queues</div>
+                        <div class="title">Assigned Queues</div>
                     </a>
                 </div>
                 
                 <div class="nav-item" aria-label="frequently contacted" (click)="changeFilter('frequent')">
                     <a class="nav-link" matRipple [ngClass]="{'active accent':filterBy ==='frequent'}">
-                        <div class="title">Unassigned queues</div>
+                        <div class="title">Unassigned Queues</div>
                     </a>
                 </div>
 

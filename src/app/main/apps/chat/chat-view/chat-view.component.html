@@ -40,7 +40,7 @@
             </div>
 
             <div>
-                <button mat-icon-button [matMenuTriggerFor]="contactMenu" aria-label="more">
+                <!-- <button mat-icon-button [matMenuTriggerFor]="contactMenu" aria-label="more">
                     <mat-icon>more_vert</mat-icon>
                 </button>
 
@@ -51,7 +51,11 @@
                     <button mat-menu-item  (click)="completeConversation()">
                         Complete
                     </button>
-                </mat-menu>
+                </mat-menu> -->
+
+                <button mat-button mat-raised-button color="accent" (click)="completeConversation()">
+                    Complete
+                </button>
             </div>
 
         </div>
