@@ -53,7 +53,7 @@ export class ManageAgentsComponent implements OnInit {
     filter: ElementRef;
 
     confirmDialogRef: MatDialogRef<FuseConfirmDialogComponent>;
-
+    fileExcel: any;
     @ViewChild('TABLE', { static: true }) table: ElementRef;
     // Private
     private _unsubscribeAll: Subject<any>;

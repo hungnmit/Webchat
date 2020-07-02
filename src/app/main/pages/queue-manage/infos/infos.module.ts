@@ -14,10 +14,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { FuseSharedModule } from '@fuse/shared.module';
 import { FuseConfirmDialogModule, FuseSidebarModule } from '@fuse/components';
 import { InfosService } from './infos.service';
-import { InfosComponent } from 'app/main/apps/infos/infos.component';
-import { InfosInfoListComponent } from 'app/main/apps/infos/info-list/info-list.component';
-import { InfosSelectedBarComponent } from 'app/main/apps/infos/info-selected-bar/info-selected-bar.component';
-import { InfosMainSidebarComponent } from 'app/main/apps/infos/sidebars/main/info-main.component';
+import { InfosComponent } from './infos.component';
+import { InfosInfoListComponent } from './info-list/info-list.component';
+import { InfosSelectedBarComponent } from './info-selected-bar/info-selected-bar.component';
+import { InfosMainSidebarComponent } from './sidebars/main/info-main.component';
+// import { InfosComponent } from 'app/main/apps/infos/infos.component';
+// import { InfosInfoListComponent } from 'app/main/apps/infos/info-list/info-list.component';
+// import { InfosSelectedBarComponent } from 'app/main/apps/infos/info-selected-bar/info-selected-bar.component';
+// import { InfosMainSidebarComponent } from 'app/main/apps/infos/sidebars/main/info-main.component';
 
 
 const routes: Routes = [
@@ -32,10 +36,10 @@ const routes: Routes = [
 
 @NgModule({
     declarations   : [
-        InfosComponent,
-        InfosInfoListComponent,
-        InfosSelectedBarComponent,
-        InfosMainSidebarComponent,
+        // InfosComponent,
+        // InfosInfoListComponent,
+        // InfosSelectedBarComponent,
+        // InfosMainSidebarComponent,
     ],
     imports        : [
         RouterModule.forChild(routes),

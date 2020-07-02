@@ -40,9 +40,9 @@ export class ManageQueuesComponent implements OnInit
 
     @ViewChild('filter', {static: true})
     filter: ElementRef;
-
+    
     confirmDialogRef: MatDialogRef<FuseConfirmDialogComponent>;
-
+    fileExcel: any;
     @ViewChild('TABLE', {static: true}) table: ElementRef;
     // Private
     private _unsubscribeAll: Subject<any>;
