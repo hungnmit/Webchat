@@ -36,21 +36,21 @@ import { InfosModule } from './queue-manage/infos/infos.module';
         // Authentication
         LoginModule,
         Login2Module,
-        RegisterModule,
-        Register2Module,
-        ForgotPasswordModule,
-        ForgotPassword2Module,
-        ResetPasswordModule,
-        ResetPassword2Module,
-        LockModule,
-        MailConfirmModule,
+        // RegisterModule,
+        // Register2Module,
+        // ForgotPasswordModule,
+        // ForgotPassword2Module,
+        // ResetPasswordModule,
+        // ResetPassword2Module,
+        // LockModule,
+        // MailConfirmModule,
 
         // Coming-soon
         //ComingSoonModule,
 
         // Errors
-        Error404Module,
-        Error500Module,
+        // Error404Module,
+        // Error500Module,
 
         // Invoices
         // InvoiceModernModule,
