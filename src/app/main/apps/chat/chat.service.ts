@@ -318,7 +318,8 @@ export class ChatService implements Resolve<any>
     }
 
     emit(event: string, data: any): void {
-        this.socket.emit(event, data);
+       let result =  this.socket.emit(event, data);
+       console.log(result);
     }
     on(event: string, cb): void {
         this.socket.on(event, data => {
@@ -382,6 +383,7 @@ export class ChatService implements Resolve<any>
             contactMessageID: contactId,
             agentID: this.user.id
         };
+        console.log(data);
         this.emit(environment.COMPLETE_CONVERSATION, data);
         this.user.chatList = this.removeElementFromArray(contactId, this.user.chatList);
         // auto change to next window if exist

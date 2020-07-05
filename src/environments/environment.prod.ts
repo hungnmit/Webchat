@@ -9,5 +9,5 @@ export const environment = {
     USER_SEND_AGENT: `USER_SEND_AGENT`,
     TRANSFER_TOKEN: `TRANSFER_TOKEN`,
     COMPLETE_CONVERSATION: `COMPLETE_CONVERSATION`,
-    SOCKET_URL: `https://chatbot1920.herokuapp.com/`,
+    SOCKET_URL: `https://api-server1920.herokuapp.com`,
 };
