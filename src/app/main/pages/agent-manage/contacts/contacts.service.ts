@@ -61,17 +61,17 @@ export class ContactsService implements Resolve<any>
                 this.getContacts(),
                 //this.getUserData(this.agentId)
             ]).then(
-                ([files]) => {
+                () => {
 
-                    this.onSearchTextChanged.subscribe(searchText => {
-                        this.searchText = searchText;
-                        this.getContacts();
-                    });
+                    // this.onSearchTextChanged.subscribe(searchText => {
+                    //     this.searchText = searchText;
+                    //     this.getContacts();
+                    // });
 
-                    this.onFilterChanged.subscribe(filter => {
-                        this.filterBy = filter;
-                        this.getContacts();
-                    });
+                    // this.onFilterChanged.subscribe(filter => {
+                    //     this.filterBy = filter;
+                    //     this.getContacts();
+                    // });
 
                     resolve();
 
@@ -130,24 +130,80 @@ export class ContactsService implements Resolve<any>
 
                         this.contacts = response['result'];
 
-                        if ( this.filterBy === 'starred' )
+                        // if ( this.filterBy === 'starred' )
+                        // {
+                        //     this.contacts = this.contacts.filter(_contact => {
+                        //         return this.user.agentInQueue.includes(_contact.id);
+                        //     });
+                        // }
+
+                        // if ( this.filterBy === 'frequent' )
+                        // {
+                        //     this.contacts = this.contacts.filter(_contact => {
+                        //         return !this.user.agentInQueue.includes(_contact.id);
+                        //     });
+                        // }
+
+                        // if ( this.searchText && this.searchText !== '' )
+                        // {
+                        //     this.contacts.forEach(function(v){ delete v.agentInQueue,v.dateReceived });
+                        //     this.contacts = FuseUtils.filterArrayByString(this.contacts, this.searchText);
+                        // }
+
+                        this.contacts = this.contacts.map(contact => {
+                            return new Contact(contact);
+                        });
+
+                        this.onContactsChanged.next(this.contacts);
+                        resolve(this.contacts);
+                    }, reject);
+            }
+        );
+    }
+    getDataFilter(filterBy): Promise<any>
+    {
+        return new Promise((resolve, reject) => {
+                this._httpClient.get<string[]>(`${environment.API_URL}/queue`)
+                    .subscribe((response: any) => {
+
+                        this.contacts = response['result'];
+
+                        if ( filterBy === 'starred' )
                         {
                             this.contacts = this.contacts.filter(_contact => {
                                 return this.user.agentInQueue.includes(_contact.id);
                             });
                         }
 
-                        if ( this.filterBy === 'frequent' )
+                        if ( filterBy === 'frequent' )
                         {
                             this.contacts = this.contacts.filter(_contact => {
                                 return !this.user.agentInQueue.includes(_contact.id);
                             });
-                        }
+                        }                       
 
-                        if ( this.searchText && this.searchText !== '' )
+                        this.contacts = this.contacts.map(contact => {
+                            return new Contact(contact);
+                        });
+
+                        this.onContactsChanged.next(this.contacts);
+                        resolve(this.contacts);
+                    }, reject);
+            }
+        );
+    }
+    getDataSearch(searchText): Promise<any>
+    {
+        return new Promise((resolve, reject) => {
+                this._httpClient.get<string[]>(`${environment.API_URL}/queue`)
+                    .subscribe((response: any) => {
+
+                        this.contacts = response['result'];                        
+
+                        if ( searchText && searchText !== '' )
                         {
                             this.contacts.forEach(function(v){ delete v.agentInQueue,v.dateReceived });
-                            this.contacts = FuseUtils.filterArrayByString(this.contacts, this.searchText);
+                            this.contacts = FuseUtils.filterArrayByString(this.contacts, searchText);
                         }
 
                         this.contacts = this.contacts.map(contact => {
@@ -160,7 +216,6 @@ export class ContactsService implements Resolve<any>
             }
         );
     }
-
     /**
      * Get user data
      *

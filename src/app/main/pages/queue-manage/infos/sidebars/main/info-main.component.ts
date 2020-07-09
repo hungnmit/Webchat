@@ -70,6 +70,7 @@ export class InfosMainSidebarComponent implements OnInit, OnDestroy
     changeFilter(filter): void
     {
         this.filterBy = filter;
-        this._infosService.onFilterChanged.next(this.filterBy);
+        //this._infosService.onFilterChanged.next(this.filterBy);
+        this._infosService.getDataFilter(this.filterBy);
     }
 }

@@ -70,6 +70,7 @@ export class ContactsMainSidebarComponent implements OnInit, OnDestroy
     changeFilter(filter): void
     {
         this.filterBy = filter;
-        this._contactsService.onFilterChanged.next(this.filterBy);
+        //this._contactsService.onFilterChanged.next(this.filterBy);
+        this._contactsService.getDataFilter(this.filterBy);
     }
 }

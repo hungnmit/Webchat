@@ -107,7 +107,8 @@ export class ManageAgentComponent implements OnInit, OnDestroy {
                 distinctUntilChanged()
             )
             .subscribe(searchText => {
-                this._contactsService.onSearchTextChanged.next(searchText);
+                //this._contactsService.onSearchTextChanged.next(searchText);
+                this._contactsService.getDataSearch(searchText);
             });
     }
 

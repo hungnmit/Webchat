@@ -107,7 +107,8 @@ export class ManageQueueComponent implements OnInit, OnDestroy {
                 distinctUntilChanged()
             )
             .subscribe(searchText => {
-                this._infosService.onSearchTextChanged.next(searchText);
+                //this._infosService.onSearchTextChanged.next(searchText);
+                this._infosService.getDataSearch(searchText);
             });
     }
 

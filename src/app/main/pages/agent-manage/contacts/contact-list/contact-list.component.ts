@@ -62,7 +62,7 @@ export class ContactsContactListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.agentId = this.agentid;
         //alert(this.agentid + this.agentinqueue);
-        if (this.agentinqueue != null || this.agentinqueue != '') {
+        if (this.agentinqueue != null && this.agentinqueue != '' && this.agentinqueue != undefined) {
             this.AgentInQueue = this.agentinqueue.split(", ");
         }
         if (this.agentinqueue == undefined) {

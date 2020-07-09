@@ -34,8 +34,7 @@ export class InfosService implements Resolve<any>
      */
     constructor(
         private _httpClient: HttpClient
-    )
-    {
+    ) {
         // Set the defaults
         this.onInfosChanged = new BehaviorSubject([]);
         this.onSelectedInfosChanged = new BehaviorSubject([]);
@@ -55,8 +54,7 @@ export class InfosService implements Resolve<any>
      * @param {RouterStateSnapshot} state
      * @returns {Observable<any> | Promise<any> | any}
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any
-    {
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
         return new Promise((resolve, reject) => {
 
             Promise.all([
@@ -65,15 +63,15 @@ export class InfosService implements Resolve<any>
             ]).then(
                 ([files]) => {
 
-                    this.onSearchTextChanged.subscribe(searchText => {
-                        this.searchText = searchText;
-                        this.getInfos();
-                    });
+                    // this.onSearchTextChanged.subscribe(searchText => {
+                    //     this.searchText = searchText;
+                    //     this.getInfos();
+                    // });
 
-                    this.onFilterChanged.subscribe(filter => {
-                        this.filterBy = filter;
-                        this.getInfos();
-                    });
+                    // this.onFilterChanged.subscribe(filter => {
+                    //     this.filterBy = filter;
+                    //     this.getInfos();
+                    // });
 
                     resolve();
 
@@ -88,8 +86,7 @@ export class InfosService implements Resolve<any>
      *
      * @returns {Promise<any>}
      */
-    getInfos(): Promise<any>
-    {
+    getInfos(): Promise<any> {
         // return new Promise((resolve, reject) => {
         //         this._httpClient.get('api/infos-infos')
         //             .subscribe((response: any) => {
@@ -124,74 +121,127 @@ export class InfosService implements Resolve<any>
         //             }, reject);
         //     }
         // );
-        
+
         return new Promise((resolve, reject) => {
-                //this._httpClient.get('api/infos-infos')
-                this._httpClient.get<string[]>(`${environment.API_URL}/agent`)
-                    .subscribe((response: any) => {
+            //this._httpClient.get('api/infos-infos')
+            this._httpClient.get<string[]>(`${environment.API_URL}/agent`)
+                .subscribe((response: any) => {
 
-                        this.infos = response['result'];
+                    this.infos = response['result'];
 
-                        if ( this.filterBy === 'starred' )
-                        {
-                            this.infos = this.infos.filter(_info => {
-                                return this.user.agentInQueue.includes(_info.id);
-                            });
-                        }
+                    // if ( this.filterBy === 'starred' )
+                    // {
+                    //     this.infos = this.infos.filter(_info => {
+                    //         return this.user.agentInQueue.includes(_info.id);
+                    //     });
+                    // }
 
-                        if ( this.filterBy === 'frequent' )
-                        {
-                            this.infos = this.infos.filter(_info => {
-                                return !this.user.agentInQueue.includes(_info.id);
-                            });
-                        }
+                    // if ( this.filterBy === 'frequent' )
+                    // {
+                    //     this.infos = this.infos.filter(_info => {
+                    //         return !this.user.agentInQueue.includes(_info.id);
+                    //     });
+                    // }
 
-                        if ( this.searchText && this.searchText !== '' )
-                        {
-                            this.infos.forEach(function(v){ delete v.agentInQueue,v.dateReceived,v.online });
-                            this.infos = FuseUtils.filterArrayByString(this.infos, this.searchText);
-                        }
+                    // if ( this.searchText && this.searchText !== '' )
+                    // {
+                    //     this.infos.forEach(function(v){ delete v.agentInQueue,v.dateReceived,v.online });
+                    //     this.infos = FuseUtils.filterArrayByString(this.infos, this.searchText);
+                    // }
 
-                        this.infos = this.infos.map(info => {
-                            return new Info(info);
-                        });
+                    this.infos = this.infos.map(info => {
+                        return new Info(info);
+                    });
 
-                        this.onInfosChanged.next(this.infos);
-                        resolve(this.infos);
-                    }, reject);
-            }
+                    this.onInfosChanged.next(this.infos);
+                    resolve(this.infos);
+                }, reject);
+        }
         );
     }
 
+    getDataFilter(filterBy): Promise<any> {
+        return new Promise((resolve, reject) => {
+            //this._httpClient.get('api/infos-infos')
+            this._httpClient.get<string[]>(`${environment.API_URL}/agent`)
+                .subscribe((response: any) => {
+
+                    this.infos = response['result'];
+
+                    if (filterBy === 'starred') {
+                        this.infos = this.infos.filter(_info => {
+                            return this.user.agentInQueue.includes(_info.id);
+                        });
+                    }
+
+                    if (filterBy === 'frequent') {
+                        this.infos = this.infos.filter(_info => {
+                            return !this.user.agentInQueue.includes(_info.id);
+                        });
+                    }
+
+                    this.infos = this.infos.map(info => {
+                        return new Info(info);
+                    });
+
+                    this.onInfosChanged.next(this.infos);
+                    resolve(this.infos);
+                }, reject);
+        }
+        );
+    }
+    getDataSearch(searchText): Promise<any>{
+        return new Promise((resolve, reject) => {
+            //this._httpClient.get('api/infos-infos')
+            this._httpClient.get<string[]>(`${environment.API_URL}/agent`)
+                .subscribe((response: any) => {
+
+                    this.infos = response['result'];
+
+                    if ( searchText && searchText !== '' )
+                    {
+                        this.infos.forEach(function(v){ delete v.agentInQueue,v.dateReceived,v.online });
+                        this.infos = FuseUtils.filterArrayByString(this.infos, searchText);
+                    }
+
+                    this.infos = this.infos.map(info => {
+                        return new Info(info);
+                    });
+
+                    this.onInfosChanged.next(this.infos);
+                    resolve(this.infos);
+                }, reject);
+        }
+        );
+    }
     /**
      * Get user data
      *
      * @returns {Promise<any>}
      */
-    getUserData(queueId): Promise<any>
-    {
+    getUserData(queueId): Promise<any> {
         return new Promise((resolve, reject) => {
-                //this._httpClient.get('api/infos-user/5725a6802d10e277a0f35724')
-                // this._httpClient.get<string[]>(`${environment.API_URL}/queue`)
-                //     .subscribe((response: any) => {
-                //         this.user = response;
-                //         this.onUserDataChanged.next(this.user);
-                //         resolve(this.user);
-                //     }, reject);
+            //this._httpClient.get('api/infos-user/5725a6802d10e277a0f35724')
+            // this._httpClient.get<string[]>(`${environment.API_URL}/queue`)
+            //     .subscribe((response: any) => {
+            //         this.user = response;
+            //         this.onUserDataChanged.next(this.user);
+            //         resolve(this.user);
+            //     }, reject);
 
-                    this._httpClient.get<Queue[]>(`${environment.API_URL}/queue/` + queueId)
-                    .subscribe((response: any) => {
-                        this.user = response['result'];
-                        if(this.user.agentInQueue != "" && this.user.agentInQueue != null){
-                            this.user.agentInQueue = this.user.agentInQueue.split(", ");
-                        }
-                        else{
-                            this.user.agentInQueue = ["-1"];
-                        }
-                        this.onUserDataChanged.next(this.user);
-                        resolve(response);
-                    }, reject);    
-            }
+            this._httpClient.get<Queue[]>(`${environment.API_URL}/queue/` + queueId)
+                .subscribe((response: any) => {
+                    this.user = response['result'];
+                    if (this.user.agentInQueue != "" && this.user.agentInQueue != null) {
+                        this.user.agentInQueue = this.user.agentInQueue.split(", ");
+                    }
+                    else {
+                        this.user.agentInQueue = ["-1"];
+                    }
+                    this.onUserDataChanged.next(this.user);
+                    resolve(response);
+                }, reject);
+        }
         );
     }
 
@@ -200,15 +250,12 @@ export class InfosService implements Resolve<any>
      *
      * @param id
      */
-    toggleSelectedInfo(id): void
-    {
+    toggleSelectedInfo(id): void {
         // First, check if we already have that info as selected...
-        if ( this.selectedInfos.length > 0 )
-        {
+        if (this.selectedInfos.length > 0) {
             const index = this.selectedInfos.indexOf(id);
 
-            if ( index !== -1 )
-            {
+            if (index !== -1) {
                 this.selectedInfos.splice(index, 1);
 
                 // Trigger the next event
@@ -229,14 +276,11 @@ export class InfosService implements Resolve<any>
     /**
      * Toggle select all
      */
-    toggleSelectAll(): void
-    {
-        if ( this.selectedInfos.length > 0 )
-        {
+    toggleSelectAll(): void {
+        if (this.selectedInfos.length > 0) {
             this.deselectInfos();
         }
-        else
-        {
+        else {
             this.selectInfos();
         }
     }
@@ -247,13 +291,11 @@ export class InfosService implements Resolve<any>
      * @param filterParameter
      * @param filterValue
      */
-    selectInfos(filterParameter?, filterValue?): void
-    {
+    selectInfos(filterParameter?, filterValue?): void {
         this.selectedInfos = [];
 
         // If there is no filter, select all infos
-        if ( filterParameter === undefined || filterValue === undefined )
-        {
+        if (filterParameter === undefined || filterValue === undefined) {
             this.selectedInfos = [];
             this.infos.map(info => {
                 this.selectedInfos.push(info.id);
@@ -270,11 +312,10 @@ export class InfosService implements Resolve<any>
      * @param info
      * @returns {Promise<any>}
      */
-    updateInfo(info): Promise<any>
-    {
+    updateInfo(info): Promise<any> {
         return new Promise((resolve, reject) => {
 
-            this._httpClient.post('api/infos-infos/' + info.id, {...info})
+            this._httpClient.post('api/infos-infos/' + info.id, { ...info })
                 .subscribe(response => {
                     this.getInfos();
                     resolve(response);
@@ -288,14 +329,13 @@ export class InfosService implements Resolve<any>
      * @param userData
      * @returns {Promise<any>}
      */
-    updateUserData(userData): Promise<any>
-    {
-        if(userData.agentInQueue[0] == "-1"){
+    updateUserData(userData): Promise<any> {
+        if (userData.agentInQueue[0] == "-1") {
             userData.agentInQueue.splice(0, 1);
         }
         return new Promise((resolve, reject) => {
             //this._httpClient.post('api/infos-user/' + this.user.id, {...userData})
-            this._httpClient.put<Queue[]>(`${environment.API_URL}/queue/` + userData.id , userData)
+            this._httpClient.put<Queue[]>(`${environment.API_URL}/queue/` + userData.id, userData)
                 .subscribe(response => {
                     this.getUserData(userData.id);
                     this.getInfos();
@@ -307,8 +347,7 @@ export class InfosService implements Resolve<any>
     /**
      * Deselect infos
      */
-    deselectInfos(): void
-    {
+    deselectInfos(): void {
         this.selectedInfos = [];
 
         // Trigger the next event
@@ -320,8 +359,7 @@ export class InfosService implements Resolve<any>
      *
      * @param info
      */
-    deleteInfo(info): void
-    {
+    deleteInfo(info): void {
         const infoIndex = this.infos.indexOf(info);
         this.infos.splice(infoIndex, 1);
         this.onInfosChanged.next(this.infos);
@@ -330,10 +368,8 @@ export class InfosService implements Resolve<any>
     /**
      * Delete selected infos
      */
-    deleteSelectedInfos(): void
-    {
-        for ( const infoId of this.selectedInfos )
-        {
+    deleteSelectedInfos(): void {
+        for (const infoId of this.selectedInfos) {
             const info = this.infos.find(_info => {
                 return _info.id === infoId;
             });

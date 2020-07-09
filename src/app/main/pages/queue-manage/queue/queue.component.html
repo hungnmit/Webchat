@@ -65,9 +65,14 @@
 
                             <div class="tab-content p-24" fusePerfectScrollbar>
 
-                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p" *ngIf="pageType ==='new'">
                                     <mat-label>ID</mat-label>
                                     <input matInput placeholder="ID" name="id" formControlName="id" required>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline" floatLabel="always" class="w-100-p" *ngIf="pageType ==='edit'">
+                                    <mat-label>ID</mat-label>
+                                    <input matInput placeholder="ID" name="id" formControlName="id" readonly required>
                                 </mat-form-field>
 
                                 <mat-form-field appearance="outline" floatLabel="always" class="w-100-p">
