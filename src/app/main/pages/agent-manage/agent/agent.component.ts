@@ -27,7 +27,7 @@ export class ManageAgentComponent implements OnInit, OnDestroy {
     productForm: FormGroup;
     queues = new FormControl();
     toggleInArray = FuseUtils.toggleInArray;
-
+    hide:any;
     dialogRef: any;
     hasSelectedContacts: boolean;
     searchInput: FormControl;

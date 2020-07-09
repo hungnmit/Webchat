@@ -62,7 +62,7 @@ export class InfosInfoListComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.queueId = this.queueid;
         //alert(this.queueid + this.agentinqueue);
-        if (this.agentinqueue != null && this.agentinqueue != '' && this.agentinqueue != undefined) {
+        if (this.agentinqueue != null || this.agentinqueue != '' || this.agentinqueue != undefined) {
             this.AgentInQueue = this.agentinqueue.split(", ");
         }
         if (this.agentinqueue == undefined) {

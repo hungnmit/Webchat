@@ -165,7 +165,7 @@ export class InfosService implements Resolve<any>
             //this._httpClient.get('api/infos-infos')
             this._httpClient.get<string[]>(`${environment.API_URL}/agent`)
                 .subscribe((response: any) => {
-
+                    this.filterBy = filterBy;
                     this.infos = response['result'];
 
                     if (filterBy === 'starred') {
@@ -338,7 +338,8 @@ export class InfosService implements Resolve<any>
             this._httpClient.put<Queue[]>(`${environment.API_URL}/queue/` + userData.id, userData)
                 .subscribe(response => {
                     this.getUserData(userData.id);
-                    this.getInfos();
+                    //this.getInfos();
+                    this.getDataFilter(this.filterBy);
                     resolve(response);
                 });
         });

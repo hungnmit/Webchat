@@ -166,6 +166,7 @@ export class ContactsService implements Resolve<any>
                 this._httpClient.get<string[]>(`${environment.API_URL}/queue`)
                     .subscribe((response: any) => {
 
+                        this.filterBy = filterBy;
                         this.contacts = response['result'];
 
                         if ( filterBy === 'starred' )
@@ -351,7 +352,8 @@ export class ContactsService implements Resolve<any>
             this._httpClient.put<Agent[]>(`${environment.API_URL}/agent/` + userData.id , userData)
                 .subscribe(response => {
                     this.getUserData(userData.id);
-                    this.getContacts();
+                    //this.getContacts();
+                    this.getDataFilter(this.filterBy);
                     resolve(response);
                 });
         });
