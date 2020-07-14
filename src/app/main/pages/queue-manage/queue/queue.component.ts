@@ -146,7 +146,8 @@ export class ManageQueueComponent implements OnInit, OnDestroy {
     saveQueue(): void {
         const data = this.productForm.getRawValue();
         //data.handle = FuseUtils.handleize(data.name);
-
+        var array = Array.from(data.agentInQueue.replace(' ', '').split(","));
+        data.agentInQueue = array;
         this._ecommerceProductService.saveQueue(data)
             .then(() => {
 

@@ -167,7 +167,8 @@ export class ManageAgentComponent implements OnInit, OnDestroy {
     saveAgent(): void {
         const data = this.productForm.getRawValue();
         //data.handle = FuseUtils.handleize(data.name);
-
+        var array = Array.from(data.agentInQueue.replace(' ', '').split(","));
+        data.agentInQueue = array;
         this._ecommerceProductService.saveAgent(data)
             .then(() => {
 
